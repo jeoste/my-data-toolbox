@@ -1,236 +1,160 @@
-# 🚀 JSON Tools - JSON Data Generator & Anonymizer
+# JSON Tools — JSON Data Generator & Anonymizer
 
-> A modern desktop application for generating realistic test data and anonymizing sensitive information in JSON format.
+> A modern desktop application to generate realistic JSON test data, anonymize sensitive fields, validate and query JSON, and work with Swagger/OpenAPI.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-16.0+-green.svg)](https://nodejs.org)
-[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://python.org)
+[![Node.js](https://img.shields.io/badge/Node.js-18.0%2B-green.svg)](https://nodejs.org)
+[![Python](https://img.shields.io/badge/Python-3.7%2B-blue.svg)](https://python.org)
 [![Electron](https://img.shields.io/badge/Electron-Desktop-lightgrey.svg)](https://electronjs.org)
 
 ## 📸 Screenshots
 
-### Main Interface - Data Generation
-![Main Interface](screenshots/main-interface.png)
-*Modern dark theme interface with sidebar navigation and real-time preview*
+> Place screenshots in `screenshots/` as described in `screenshots/README.md`.
 
-### Data Generation in Action
-![Data Generation](screenshots/data-generation.png)
-*Generate realistic test data from JSON skeleton with Swagger/OpenAPI constraints*
-
-### Data Anonymization
-![Data Anonymization](screenshots/data-anonymization.png)
-*Anonymize sensitive data while preserving structure and relationships*
-
-### Configuration Panel
-![Configuration](screenshots/configuration.png)
-*Intuitive configuration with file upload and direct content editing*
-
-### Generated Data Preview
-![Preview](screenshots/preview.png)
-*Real-time preview with syntax highlighting and formatting options*
+- Main Interface — sidebar + content
+- Data Generation — skeleton to generated JSON
+- Data Anonymization — before/after preview
+- Configuration — dialogs and options
+- Preview — formatted output
 
 ## ✨ Features
 
-### 🎯 Core Functionality
-- **Smart Data Generation**: Create realistic test data using Faker.js
-- **JSON Skeleton Support**: Define data structure with JSON templates
-- **Swagger/OpenAPI Integration**: Apply API constraints and validation rules
-- **Data Anonymization**: Protect sensitive information while preserving data utility
-- **Real-time Preview**: See generated data instantly with syntax highlighting
+- Generate realistic data from JSON skeletons (Python engine, Faker)
+- Optional Swagger/OpenAPI constraints during generation
+- JSON anonymization (preserve structure/relationships)
+- JSON validation and pretty-print
+- JSONPath querying with live evaluation
+- Convert JSON example → OpenAPI schema (helper)
+- Build skeletons from OpenAPI schemas (helper)
+- Modern UI: dark/light themes, i18n (EN/FR/KO)
 
-### 🎨 User Experience
-- **Modern Interface**: Clean, dark theme with intuitive navigation
-- **Dual Input Methods**: File upload or direct content editing
-- **Export Options**: Save to file or copy to clipboard
-- **Format & Validate**: Automatic JSON formatting and validation
-- **Status Indicators**: Real-time feedback on operations
+## 🧱 Tech Stack
 
-### 🔧 Technical Features
-- **Cross-platform**: Works on Windows, macOS, and Linux
-- **Offline Capable**: No internet connection required
-- **Fast Processing**: Efficient data generation and anonymization
-- **Extensible**: Modular architecture for easy customization
+- Electron (main/preload), React 18 + TypeScript, Vite 5, Tailwind CSS, shadcn/ui
+- Python backend (CLI) for generation/anonymization: `faker`, `pyyaml`, `jsonschema`, `openapi-spec-validator`
 
-## 🛠️ Installation
-
-### Prerequisites
-- **Node.js 16.0+** - [Download here](https://nodejs.org)
-- **Python 3.7+** - [Download here](https://python.org)
-
-### Quick Start
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/jsonnymous.git
-   cd jsonnymous
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm run install
-   ```
-
-3. **Launch the application**
-   ```bash
-   npm start
-   ```
-
-## 📖 Usage Guide
-
-### 1. Data Generation
-1. **Select Input Method**: Choose between file upload or direct content editing
-2. **Provide JSON Skeleton**: Define your data structure template
-3. **Add Swagger (Optional)**: Include API constraints for validation
-4. **Generate Data**: Click "Generate Data" to create realistic test data
-5. **Export Results**: Save to file or copy to clipboard
-
-### 2. Data Anonymization
-1. **Load Source Data**: Upload JSON file or paste content directly
-2. **Configure Anonymization**: Select fields and anonymization methods
-3. **Preview Changes**: Review anonymized data before saving
-4. **Export Anonymized Data**: Save secure version of your data
-
-### 3. Advanced Features
-- **Batch Processing**: Generate multiple datasets at once
-- **Custom Patterns**: Define custom data generation patterns
-- **Validation Rules**: Apply complex validation constraints
-- **Data Relationships**: Maintain referential integrity
-
-## 📁 Project Structure
+## 🗂️ Project Structure
 
 ```
-jsonnymous/
-├── electron/                 # Electron app files
-│   ├── main.js              # Main process
-│   ├── renderer/            # Renderer process
-│   │   ├── index.html       # UI structure
-│   │   ├── renderer.js      # UI logic
-│   │   └── styles.css       # Styling
-│   └── package.json         # Electron dependencies
-├── src/                     # Python backend
-│   ├── data_generator.py    # Data generation logic
-│   ├── data_anonymizer.py   # Anonymization engine
-│   ├── json_processor.py    # JSON processing utilities
-│   └── cli_generate.py      # CLI interface
-├── examples/                # Sample files
-├── docs/                    # Documentation
-└── screenshots/             # Application screenshots
+json-tools/
+├─ electron/                 # Desktop app (UI + Electron)
+│  ├─ main.js               # Electron main process
+│  ├─ preload.js            # Secured IPC bridge
+│  ├─ src/                  # React app
+│  │  ├─ App.tsx
+│  │  ├─ components/
+│  │  │  ├─ views/          # Generate / Anonymize / Swagger / Validator / JSONPath
+│  │  │  └─ ui/             # shadcn/ui components
+│  │  ├─ hooks/
+│  │  ├─ locales/           # i18n resources (en, fr, ko)
+│  │  ├─ globals.css
+│  │  └─ main.tsx
+│  └─ package.json
+├─ src/                     # Python backend (CLI)
+│  ├─ cli_generate.py       # Entry point for generation/anonymization
+│  ├─ data_generator.py
+│  ├─ data_anonymizer.py
+│  ├─ json_processor.py
+│  └─ swagger_parser.py
+├─ examples/                # Sample skeletons and swagger specs
+├─ docs/                    # Plan & release notes
+└─ screenshots/             # Marketing screenshots
 ```
 
-## 🚀 Development
+## 🔧 Prerequisites
 
-### Available Scripts
+- Node.js 18.0+ (required by Vite 5)
+- Python 3.7+ (recommended 3.10/3.11)
+- Windows 10+ / macOS / Linux
+
+## 🚀 Quick Start (Development)
+
+From the repository root:
+
+```powershell
+npm run install          # installs Electron app dependencies (inside ./electron)
+npm run electron:dev     # starts Vite dev server + launches Electron
+```
+
+Notes
+- On first run, Python dependencies from `requirements.txt` may be installed automatically by the app (dev mode). If needed, install them manually:
+  ```powershell
+  py -m pip install -r requirements.txt
+  ```
+- The UI runs on `http://localhost:5173` and Electron opens it automatically.
+
+## 📦 Build & Distribution
+
+- Build UI only (Vite production build):
+  ```powershell
+  npm run build
+  ```
+- Build Windows installer (Electron Builder):
+  ```powershell
+  cd electron
+  npm run electron:build-win
+  ```
+  The installer will be generated in `electron/dist-electron/`.
+
+> Auto-update is prepared (GitHub Releases) but currently disabled by default while stabilizing the pipeline. See `electron/UPDATE-SYSTEM-SUMMARY.md` and `docs/RELEASE.md`.
+
+## 🖥️ Using the Python CLI directly
+
+Run the CLI without the UI for automation or testing.
+
+- Generate from skeleton:
+  ```powershell
+  py .\src\cli_generate.py --skeleton .\examples\skeleton_example.json --pretty
+  ```
+- Generate with Swagger/OpenAPI constraints:
+  ```powershell
+  py .\src\cli_generate.py --skeleton .\examples\skeleton_example.json --swagger .\examples\swagger_example.yaml --pretty
+  ```
+- Anonymize a JSON file:
+  ```powershell
+  py .\src\cli_generate.py --anonymize .\examples\test_anonymization.json --pretty
+  ```
+- Analyze sensitive fields:
+  ```powershell
+  py .\src\cli_generate.py --analyze .\examples\user_example.json --pretty
+  ```
+
+## 🧪 Available NPM Scripts (root)
+
 ```bash
-npm start          # Launch the application
-npm run dev        # Development mode with hot reload
-npm run build      # Build for production
-npm run build-win  # Build for Windows
-npm run dist       # Create distribution package
+npm run install         # cd electron && npm install
+npm run dev             # cd electron && npm run dev (Vite only)
+npm run electron:dev    # cd electron && npm run electron:dev (Electron + Vite)
+npm run build           # cd electron && npm run build (Vite build)
 ```
 
-### Development Setup
-1. **Fork the repository**
-2. **Create a feature branch**
-3. **Make your changes**
-4. **Run tests** (if available)
-5. **Submit a pull request**
+> For packaging, use the commands from the `electron/` directory (e.g., `npm run electron:dist`, `npm run electron:build`, `npm run electron:build-win`).
 
-## 🎨 Examples
+> Tip: prefer `npm run electron:dev` during development.
 
-### Basic JSON Skeleton
-```json
-{
-  "users": [
-    {
-      "id": "{{faker.random.uuid}}",
-      "name": "{{faker.name.fullName}}",
-      "email": "{{faker.internet.email}}",
-      "age": "{{faker.random.number(18, 80)}}",
-      "address": {
-        "street": "{{faker.address.streetAddress}}",
-        "city": "{{faker.address.city}}",
-        "country": "{{faker.address.country}}"
-      }
-    }
-  ]
-}
-```
+## 🗺️ Roadmap
 
-### Swagger Integration
-```yaml
-openapi: 3.0.0
-info:
-  title: User API
-  version: 1.0.0
-paths:
-  /users:
-    get:
-      responses:
-        '200':
-          description: List of users
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  users:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/User'
-```
+See `docs/plan.md` for the current roadmap (accounts, sync, updates, tests, etc.).
 
-## 🔧 Troubleshooting
+## 🛠️ Troubleshooting
 
-### Common Issues
+- “Python not found”: Install Python from `https://python.org`, check “Add Python to PATH”, restart the terminal.
+- “npm command not found”: Install Node.js from `https://nodejs.org`, then verify with `node --version`.
+- App won’t start: ensure `npm run install` succeeded, Python and Node meet version requirements, and check the console logs.
 
-**"Python not found"**
-- Install Python from https://python.org
-- Ensure "Add Python to PATH" is checked during installation
-- Restart your computer after installation
+## 🙌 Acknowledgments
 
-**"npm command not found"**
-- Install Node.js from https://nodejs.org
-- Restart your terminal/command prompt
-- Verify installation with `node --version`
-
-**Application won't start**
-- Check that all dependencies are installed: `npm run install`
-- Verify Python and Node.js versions meet requirements
-- Check the console for error messages
-
-### Performance Tips
-- Use smaller datasets for initial testing
-- Enable hardware acceleration in settings
-- Close other resource-intensive applications
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Guidelines
-- Follow existing code style and conventions
-- Add tests for new features
-- Update documentation as needed
-- Ensure cross-platform compatibility
+- UI design inspired by Acreom
+- shadcn/ui, Radix UI, Lucide Icons
+- Electron, Vite, Tailwind CSS
+- Faker, JSONPath-Plus
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT — see `LICENSE`.
 
-## 🙏 Acknowledgments
+## 💬 Support
 
-- **Faker.js** for realistic data generation
-- **Electron** for cross-platform desktop capabilities
-- **OpenAPI** specification for API constraints
-- **Acreom** for design inspiration
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/jsonnymous/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/jsonnymous/discussions)
-- **Email**: support@jsonnymous.com
-
----
-
-**Made with ❤️ by the JSONnymous Team**
-
-*Transform your data workflow with intelligent generation and anonymization* 
+- Issues: `https://github.com/jeoste/json-tools/issues`
+- Discussions: `https://github.com/jeoste/json-tools/discussions`
+- Contact: jeoffrey.stephan.pro@gmail.com 
