@@ -1,0 +1,80 @@
+name: Build and Release (Windows)
+
+on:
+  push:
+    branches: [ master ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-release-windows:
+    runs-on: windows-latest
+    env:
+      # Enable auto-updates in packaged app (default). Set to true only to disable.
+      DISABLE_UPDATES: ''
+      # Version base major.minor; the patch will be set to the GitHub run number
+      BASE_VERSION: 0.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compute version
+        id: version
+        shell: pwsh
+        run: |
+          $newVersion = "${{ env.BASE_VERSION }}.${{ github.run_number }}"
+          echo "newVersion=$newVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Set electron/package.json version
+        shell: pwsh
+        run: |
+          $pkgPath = "electron/package.json"
+          $json = Get-Content $pkgPath -Raw | ConvertFrom-Json
+          $json.version = "${{ steps.version.outputs.newVersion }}"
+          $json | ConvertTo-Json -Depth 100 | Set-Content $pkgPath -Encoding UTF8
+          Write-Host "electron version -> $($json.version)"
+
+      - name: Install Node dependencies (electron)
+        working-directory: electron
+        run: npm ci
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build backend.exe (PyInstaller)
+        run: |
+          pyinstaller --onefile src/backend_entry.py --name backend --distpath dist --workpath build --clean
+
+      - name: Build renderer (Vite)
+        working-directory: electron
+        run: npm run build
+
+      - name: Build & Publish Electron (Windows)
+        working-directory: electron
+        env:
+          # Electron Builder uses this token to create the GitHub Release and upload assets
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder --win --publish always
+
+      - name: Upload artifacts (debug)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-electron
+          path: electron/dist-electron/**
+
+

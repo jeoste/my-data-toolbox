@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Zap, FilePlus, Copy, Loader2, FileText } from 'lucide-react'
@@ -10,6 +11,8 @@ import { useTranslation } from 'react-i18next'
 export function GenerateView() {
   const [skeleton, setSkeleton] = useState('')
   const [generated, setGenerated] = useState<string | null>(null)
+  const [seed, setSeed] = useState<string>('')
+  const [count, setCount] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
   const { t } = useTranslation()
@@ -22,6 +25,8 @@ export function GenerateView() {
 
       const response = await window.electronAPI.generateData({
         skeleton_content: skeleton,
+        seed: seed ? Number(seed) : undefined,
+        count: count ? Number(count) : undefined,
       })
 
       if (response?.success) {
@@ -58,6 +63,8 @@ export function GenerateView() {
       setLoading(true)
       const response = await window.electronAPI.generateData({
         skeleton_path: filePath,
+        seed: seed ? Number(seed) : undefined,
+        count: count ? Number(count) : undefined,
       })
       if (response?.success) {
         const formatted = JSON.stringify(response.data, null, 2)
@@ -97,6 +104,25 @@ export function GenerateView() {
     }
   }
 
+  // Drag & drop support
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    try {
+      const file = e.dataTransfer?.files?.[0]
+      if (!file) return
+      const filePath = (file as any).path as string | undefined
+      if (!filePath) return
+      const result = await window.electronAPI.readJsonFile(filePath)
+      if (result.success) {
+        setSkeleton(result.content)
+      } else {
+        throw new Error(result.error)
+      }
+    } catch (error: any) {
+      toast({ title: t('common.error'), description: error?.message, variant: 'destructive' })
+    }
+  }
+
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -111,13 +137,27 @@ export function GenerateView() {
               {t('generate.instruction')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4" onDragOver={(e) => e.preventDefault()} onDrop={handleDrop}>
             <Textarea
               placeholder={t('generate.placeholder')}
               className="min-h-[400px] font-mono text-sm"
               value={skeleton}
               onChange={(e) => setSkeleton(e.target.value)}
             />
+            <div className="grid grid-cols-2 gap-2">
+              <Input
+                type="number"
+                placeholder={t('generate.seedPlaceholder')}
+                value={seed}
+                onChange={(e) => setSeed(e.target.value)}
+              />
+              <Input
+                type="number"
+                placeholder={t('generate.countPlaceholder')}
+                value={count}
+                onChange={(e) => setCount(e.target.value)}
+              />
+            </div>
             <div className="flex flex-wrap gap-2">
               <Button onClick={handleGenerate} disabled={!skeleton.trim() || loading}>
                 {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Zap className="w-4 h-4 mr-2" />}
@@ -132,6 +172,8 @@ export function GenerateView() {
                 onClick={() => {
                   setSkeleton('')
                   setGenerated(null)
+                  setSeed('')
+                  setCount('')
                 }}
                 disabled={loading}
               >

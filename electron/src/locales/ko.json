@@ -75,6 +75,8 @@
     "skeletonTitle": "JSON 스켈레톤",
     "instruction": "JSON 스켈레톤을 붙여넣거나 파일을 가져온 후 \"생성\" 버튼을 클릭하세요",
     "placeholder": "JSON 스켈레톤을 여기에 붙여넣으세요...",
+    "seedPlaceholder": "시드 (선택)",
+    "countPlaceholder": "개수 (선택)",
     "button": {
       "generate": "생성",
       "import": "파일 가져오기",

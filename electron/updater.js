@@ -1,7 +1,6 @@
 const { autoUpdater } = require('electron-updater');
 const { dialog } = require('electron');
 const log = require('electron-log');
-const path = require('path');
 
 // Configuration du logger
 log.transports.file.level = 'info';
@@ -11,23 +10,16 @@ class UpdateManager {
   constructor(mainWindow) {
     this.mainWindow = mainWindow;
     this.isCheckingForUpdates = false;
+    this.isManualCheck = false;
     this.setupAutoUpdater();
   }
 
   setupAutoUpdater() {
-    // Configuration pour GitHub Releases
-    autoUpdater.setFeedURL({
-      provider: 'github',
-      owner: 'jeoste',
-      repo: 'json-tools', // Nom mis à jour
-      private: false
-    });
-
-    // Configuration pour le développement
-    if (process.env.NODE_ENV === 'development') {
-      autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
-      autoUpdater.forceDevUpdateConfig = true;
-    }
+    // Conf auto-updater (electron-builder génère app-update.yml, inutile de setFeedURL)
+    autoUpdater.autoDownload = true;
+    autoUpdater.autoInstallOnAppQuit = true;
+    autoUpdater.allowDowngrade = false;
+    autoUpdater.allowPrerelease = false;
 
     // Événements autoUpdater
     autoUpdater.on('checking-for-update', () => {
@@ -40,21 +32,28 @@ class UpdateManager {
       log.info('✅ Mise à jour disponible:', info.version);
       this.isCheckingForUpdates = false;
       this.sendStatusToWindow('available', `Mise à jour disponible: v${info.version}`);
-      this.showUpdateAvailableDialog(info);
+      // Dialogue uniquement pour vérification manuelle
+      if (this.isManualCheck) {
+        this.showUpdateAvailableDialog(info);
+      }
     });
 
-    autoUpdater.on('update-not-available', (info) => {
+    autoUpdater.on('update-not-available', () => {
       log.info('ℹ️ Aucune mise à jour disponible');
       this.isCheckingForUpdates = false;
       this.sendStatusToWindow('not-available', 'Vous utilisez déjà la dernière version');
-      this.showNoUpdateDialog();
+      if (this.isManualCheck) {
+        this.showNoUpdateDialog();
+      }
     });
 
     autoUpdater.on('error', (err) => {
       log.error('❌ Erreur lors de la vérification des mises à jour:', err);
       this.isCheckingForUpdates = false;
       this.sendStatusToWindow('error', 'Erreur lors de la vérification des mises à jour');
-      this.showUpdateErrorDialog(err);
+      if (this.isManualCheck) {
+        this.showUpdateErrorDialog(err);
+      }
     });
 
     autoUpdater.on('download-progress', (progressObj) => {
@@ -73,28 +72,30 @@ class UpdateManager {
       });
     });
 
-    autoUpdater.on('update-downloaded', (info) => {
+    autoUpdater.on('update-downloaded', () => {
       log.info('✅ Mise à jour téléchargée');
       this.sendStatusToWindow('downloaded', 'Mise à jour téléchargée et prête à installer');
-      this.showUpdateDownloadedDialog();
+      if (this.isManualCheck) {
+        this.showUpdateDownloadedDialog();
+      }
     });
   }
 
   // Méthode pour vérifier les mises à jour manuellement (avec dialogue)
-  async checkForUpdates(showNoUpdateDialog = true) {
+  async checkForUpdates() {
     if (this.isCheckingForUpdates) {
       log.info('⏳ Vérification de mise à jour déjà en cours');
       return;
     }
 
     try {
-      this.showNoUpdateDialog = showNoUpdateDialog;
+      this.isManualCheck = true;
       await autoUpdater.checkForUpdates();
     } catch (error) {
       log.error('❌ Erreur lors de la vérification manuelle:', error);
       this.isCheckingForUpdates = false;
       this.sendStatusToWindow('error', 'Erreur lors de la vérification des mises à jour');
-      if (showNoUpdateDialog) {
+      if (this.isManualCheck) {
         this.showUpdateErrorDialog(error);
       }
     }
@@ -107,7 +108,7 @@ class UpdateManager {
     }
 
     try {
-      this.showNoUpdateDialog = false; // Pas de dialogue si aucune mise à jour
+      this.isManualCheck = false; // Pas de dialogues intrusifs en mode auto
       log.info('🚀 Vérification automatique des mises à jour au lancement');
       await autoUpdater.checkForUpdatesAndNotify();
     } catch (error) {
@@ -159,10 +160,6 @@ class UpdateManager {
 
   // Dialogue pour aucune mise à jour (seulement pour vérifications manuelles)
   showNoUpdateDialog() {
-    if (this.showNoUpdateDialog === false) {
-      return; // Pas de dialogue pour les vérifications automatiques
-    }
-
     dialog.showMessageBoxSync(this.mainWindow, {
       type: 'info',
       title: '✅ Application à jour',

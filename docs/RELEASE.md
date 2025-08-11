@@ -23,24 +23,25 @@ Le processus de release automatisé :
 
 ## 🎯 Méthodes de déclenchement
 
-### 1. Via Tag Git (Recommandé)
+### 1. CI Auto (push sur master)
+Un push sur `master` déclenche automatiquement le workflow `Build and Release (Windows)`:
+- Met à jour la version dans `electron/package.json` en `BASE_VERSION + run_number`
+- Build le backend Python (`backend.exe`) via PyInstaller
+- Build l'UI (Vite) et l’app Electron
+- Publie la Release GitHub avec les assets et `latest.yml`
+
+### 2. Via Tag Git (Optionnel)
 ```bash
 # Créer et pousser un tag
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-### 2. Via Script PowerShell (Plus simple)
+### 3. Via Script PowerShell (Optionnel)
 ```powershell
 # Depuis la racine du projet
 .\scripts\release.ps1 -Version "1.0.0" -Push
 ```
-
-### 3. Via GitHub Actions (Manuel)
-1. Aller sur GitHub → Actions
-2. Sélectionner "Build and Release"
-3. Cliquer "Run workflow"
-4. Entrer la version (ex: v1.0.0)
 
 ## 📝 Processus détaillé
 
@@ -68,6 +69,16 @@ Le script :
 - Déclenche automatiquement le workflow
 
 ### Étape 3 : Suivi du build
+### Activer/désactiver l'auto-update en production (packagé)
+
+Par défaut, l'auto-update est activé en build packagé. Pour le désactiver (ex: canaux internes/QA), exposez :
+
+```powershell
+$Env:DISABLE_UPDATES = "true"
+```
+
+Dans GitHub Actions, configurez `DISABLE_UPDATES: true` si besoin.
+
 1. Aller sur GitHub → Actions
 2. Surveiller le workflow "Build and Release"
 3. Vérifier les logs en cas d'erreur

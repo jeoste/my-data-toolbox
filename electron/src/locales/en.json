@@ -75,6 +75,8 @@
     "skeletonTitle": "JSON Skeleton",
     "instruction": "Paste a JSON skeleton or import a file, then click \"Generate\"",
     "placeholder": "Paste your JSON skeleton here...",
+    "seedPlaceholder": "Seed (optional)",
+    "countPlaceholder": "Count (optional)",
     "button": {
       "generate": "Generate",
       "import": "Import file",

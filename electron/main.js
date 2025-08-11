@@ -3,8 +3,8 @@ const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs-extra');
 const os = require('os');
-// === Mise à jour désactivée temporairement ===
-const updatesEnabled = false; // Mettre à true pour réactiver l'auto-update
+// === Mise à jour: activée par défaut en version packagée ===
+// Pour désactiver, définir DISABLE_UPDATES=true dans l'environnement.
 
 let UpdateManager;
 if (updatesEnabled) {
@@ -72,7 +72,8 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     
-    // Mise à jour : désactivée lorsque updatesEnabled === false
+    // Mise à jour : activer seulement en mode packagé (sauf si désactivée via env)
+    const updatesEnabled = isPackaged && process.env.DISABLE_UPDATES !== 'true';
     if (updatesEnabled) {
       // Initialize update manager
       updateManager = new UpdateManager(mainWindow);
@@ -268,10 +269,32 @@ ipcMain.handle('read-file', async (event, filePath) => {
   }
 });
 
+// Compatibility alias used by preload
+ipcMain.handle('read-json-file', async (event, filePath) => {
+  try {
+    const content = await fs.readFile(filePath, 'utf8');
+    return { success: true, content };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 // Write file handler
 ipcMain.handle('write-file', async (event, filePath, content) => {
   try {
     await fs.writeFile(filePath, content, 'utf8');
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Compatibility alias used by preload (object payload)
+ipcMain.handle('save-file', async (event, payload) => {
+  try {
+    const { filePath, data } = payload || {};
+    if (!filePath) return { success: false, error: 'No filePath provided' };
+    await fs.writeFile(filePath, data ?? '', 'utf8');
     return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
@@ -581,6 +604,29 @@ ipcMain.handle('show-error-box', async (event, title, content) => {
   }
 });
 
+// Convenience wrappers used by preload
+ipcMain.handle('show-error', async (_event, { title, message }) => {
+  try {
+    dialog.showErrorBox(title || 'Error', message || '');
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('show-info', async (_event, { title, message }) => {
+  try {
+    await dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: title || 'Info',
+      message: message || ''
+    });
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 // Minimize window
 ipcMain.handle('minimize-window', async () => {
   try {
@@ -656,7 +702,23 @@ ipcMain.handle('set-window-bounds', async (event, bounds) => {
 // Update handlers
 ipcMain.handle('check-for-updates', async () => {
   if (updateManager) {
-    await updateManager.checkForUpdates(true); // Avec dialogue "pas de mise à jour"
+    await updateManager.checkForUpdates();
+  } else if (!isPackaged) {
+    // Envoyer un statut non bloquant en dev
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('update-status', {
+        status: 'not-available',
+        message: 'Updates are only available in packaged builds.'
+      });
+    }
+  } else {
+    if (mainWindow && mainWindow.webContents) {
+      const disabled = process.env.DISABLE_UPDATES === 'true';
+      mainWindow.webContents.send('update-status', {
+        status: 'error',
+        message: disabled ? 'Updates are disabled by configuration.' : 'Update service not initialized.'
+      });
+    }
   }
 });
 
@@ -678,7 +740,7 @@ ipcMain.handle('get-app-version', () => {
 
 // New unified handlers for the updated interface
 ipcMain.handle('generate-data', async (event, requestData) => {
-  const { skeleton_path, skeleton_content, swagger_path } = requestData;
+  const { skeleton_path, skeleton_content, swagger_path, seed, count } = requestData;
   
   let result;
   
@@ -694,6 +756,8 @@ ipcMain.handle('generate-data', async (event, requestData) => {
         if (swagger_path) {
           args.push('--swagger', swagger_path);
         }
+        if (seed) args.push('--seed', String(seed));
+        if (count) args.push('--count', String(count));
       } else {
         const pythonScriptPath = getResourcePath('src/cli_generate.py');
         if (!fs.existsSync(pythonScriptPath)) {
@@ -705,6 +769,8 @@ ipcMain.handle('generate-data', async (event, requestData) => {
         if (swagger_path) {
           args.push('--swagger', swagger_path);
         }
+        if (seed) args.push('--seed', String(seed));
+        if (count) args.push('--count', String(count));
       }
 
       const child = spawn(command, args, { shell: true });
@@ -758,6 +824,8 @@ ipcMain.handle('generate-data', async (event, requestData) => {
           if (swagger_path) {
             args.push('--swagger', swagger_path);
           }
+          if (seed) args.push('--seed', String(seed));
+          if (count) args.push('--count', String(count));
         } else {
           const pythonScriptPath = getResourcePath('src/cli_generate.py');
           if (!fs.existsSync(pythonScriptPath)) {
@@ -769,6 +837,8 @@ ipcMain.handle('generate-data', async (event, requestData) => {
           if (swagger_path) {
             args.push('--swagger', swagger_path);
           }
+          if (seed) args.push('--seed', String(seed));
+          if (count) args.push('--count', String(count));
         }
 
         const child = spawn(command, args, { shell: true });

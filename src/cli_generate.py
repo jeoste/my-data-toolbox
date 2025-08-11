@@ -26,6 +26,10 @@ def main():
     parser.add_argument('--output', '-o', type=str, help='Output file path (default: stdout)')
     parser.add_argument('--pretty', '-p', action='store_true', help='Pretty print JSON output')
     
+    # Generation parameters
+    parser.add_argument('--count', type=int, help='Number of items to generate when arrays are inferred (overrides defaults)')
+    parser.add_argument('--seed', type=int, help='Seed for reproducible generation')
+
     # Anonymization mode
     parser.add_argument('--anonymize', '-a', type=str, help='Path to JSON file to anonymize')
     parser.add_argument('--analyze', type=str, help='Path to JSON file to analyze for sensitive fields')
@@ -108,10 +112,33 @@ def main():
         
         # Initialize data generator
         generator = DataGenerator()
+        if args.seed is not None:
+            try:
+                generator.set_seed(int(args.seed))
+            except Exception:
+                pass
         
         # Process JSON with processor
         processor = JSONProcessor()
         result = processor.process_json(skeleton, swagger_schema, generator)
+
+        # Apply count override to top-level arrays if requested and applicable
+        if args.count is not None and isinstance(result, dict):
+            def override_arrays(obj):
+                if isinstance(obj, list):
+                    # Simple strategy: repeat/trim to target length
+                    if args.count >= 0:
+                        if len(obj) == 0 and isinstance(skeleton, dict):
+                            # Leave empty lists as-is when skeleton is empty; generation path handles counts
+                            return obj
+                        if len(obj) == 0:
+                            return obj
+                        sample = obj[0]
+                        return [sample] * args.count
+                if isinstance(obj, dict):
+                    return {k: override_arrays(v) for k, v in obj.items()}
+                return obj
+            result = override_arrays(result)
         
         # Output result
         if args.output:

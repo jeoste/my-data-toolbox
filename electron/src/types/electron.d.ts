@@ -22,10 +22,14 @@ declare global {
     saveFileDialog: (options: any) => Promise<string | null>
     readJsonFile: (filePath: string) => Promise<{ success: boolean; content: string; error?: string }>
     saveFile: (filePath: string, data: string) => Promise<{ success: boolean; error?: string }>
+    showError: (title: string, message: string) => Promise<{ success: boolean; error?: string }>
+    showInfo: (title: string, message: string) => Promise<{ success: boolean; error?: string }>
     generateData: (request: {
       skeleton_path?: string
       skeleton_content?: string
       swagger_path?: string
+      seed?: number
+      count?: number
     }) => Promise<{ success: boolean; data: any }>
     
     // Update management

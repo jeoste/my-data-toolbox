@@ -76,6 +76,8 @@
     "skeletonTitle": "Squelette JSON",
     "instruction": "Collez un squelette JSON ou importez un fichier, puis cliquez sur « Generate »",
     "placeholder": "Collez votre squelette JSON ici...",
+    "seedPlaceholder": "Seed (optionnel)",
+    "countPlaceholder": "Count (optionnel)",
     "button": {
       "generate": "Generate",
       "import": "Importer fichier",

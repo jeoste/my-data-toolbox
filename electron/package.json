@@ -64,11 +64,13 @@
     "productName": "JSON Tools",
     "copyright": "Copyright © 2025 jeoste",
     "icon": "assets/icon.ico",
-    "publish": {
-      "provider": "github",
-      "owner": "jeoste",
-      "repo": "json-tools"
-    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "jeoste",
+        "repo": "json-tools"
+      }
+    ],
     "directories": {
       "output": "dist-electron",
       "buildResources": "assets"
@@ -108,6 +110,10 @@
       {
         "from": "../LICENSE",
         "to": "LICENSE"
+      },
+      {
+        "from": "../dist/backend.exe",
+        "to": "backend.exe"
       }
     ],
     "win": {

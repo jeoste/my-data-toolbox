@@ -96,7 +96,7 @@ Notes
   ```
   The installer will be generated in `electron/dist-electron/`.
 
-> Auto-update is prepared (GitHub Releases) but currently disabled by default while stabilizing the pipeline. See `electron/UPDATE-SYSTEM-SUMMARY.md` and `docs/RELEASE.md`.
+> Auto-update: enabled by default in packaged builds. To disable, set `DISABLE_UPDATES=true`. See `electron/UPDATE-SYSTEM-SUMMARY.md` and `docs/RELEASE.md`.
 
 ## 🖥️ Using the Python CLI directly
 
