@@ -28,5 +28,5 @@
       "@libs/*": ["./src/lib/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/components/ui/sonner.tsx", "src/lib/utils.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/components/ui/sonner.tsx", "src/lib/utils.ts", "src/types/images.d.ts"]
 } 

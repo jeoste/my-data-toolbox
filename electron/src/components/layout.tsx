@@ -1,7 +1,7 @@
 import { Lock, Zap, FileText, CheckCircle, Search, Info, User, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ViewType } from '@/App'
-import logoPng from '../../assets/logo_bracket.png'
+import logoPng from '../../assets/json-tools-logo.jpg'
 import { cn } from 'src/lib/utils'
 import {
   Sheet,

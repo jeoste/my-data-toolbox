@@ -5,6 +5,7 @@ const fs = require('fs-extra');
 const os = require('os');
 // === Mise à jour: activée par défaut en version packagée ===
 // Pour désactiver, définir DISABLE_UPDATES=true dans l'environnement.
+const updatesEnabled = app.isPackaged && process.env.DISABLE_UPDATES !== 'true';
 
 let UpdateManager;
 if (updatesEnabled) {
@@ -54,7 +55,7 @@ function createWindow() {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     },
-    icon: path.join(__dirname, 'assets', 'logo_bracket.png'),
+    icon: path.join(__dirname, 'assets', 'json-tools-logo.ico'),
     show: false,
     titleBarStyle: 'default'
   });
@@ -73,7 +74,6 @@ function createWindow() {
     mainWindow.show();
     
     // Mise à jour : activer seulement en mode packagé (sauf si désactivée via env)
-    const updatesEnabled = isPackaged && process.env.DISABLE_UPDATES !== 'true';
     if (updatesEnabled) {
       // Initialize update manager
       updateManager = new UpdateManager(mainWindow);

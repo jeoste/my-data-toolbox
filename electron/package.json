@@ -63,7 +63,7 @@
     "appId": "com.json-tools.json-generator",
     "productName": "JSON Tools",
     "copyright": "Copyright © 2025 jeoste",
-    "icon": "assets/icon.ico",
+    "icon": "assets/json-tools-logo.ico",
     "publish": [
       {
         "provider": "github",
