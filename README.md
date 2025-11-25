@@ -120,20 +120,44 @@ This creates an optimized production build in the `dist/` directory.
 
 ### Deploy to Vercel
 
-1. **Connect your repository:**
-   - Push your code to GitHub
-   - Import your repository in [Vercel](https://vercel.com)
-   - Vercel will automatically detect the project settings
+Il existe deux méthodes pour déployer automatiquement sur Vercel :
 
-2. **Configure environment variables (if needed):**
-   - Go to your project settings in Vercel
-   - Add any required environment variables
+#### Méthode 1 : Intégration native Vercel (Recommandée)
 
-3. **Deploy:**
-   - Vercel will automatically deploy on every push to the main branch
-   - Preview deployments are created for pull requests
+1. **Connecter votre dépôt GitHub:**
+   - Allez sur [Vercel](https://vercel.com)
+   - Importez votre dépôt GitHub
+   - Vercel détectera automatiquement les paramètres du projet
 
-The application will be available at `https://your-project.vercel.app`
+2. **Configurer les variables d'environnement (si nécessaire):**
+   - Allez dans les paramètres du projet sur Vercel
+   - Ajoutez les variables d'environnement requises
+
+3. **Déploiement automatique:**
+   - Vercel déploiera automatiquement à chaque push sur la branche `main`
+   - Des déploiements de preview sont créés pour les pull requests
+
+L'application sera disponible à `https://your-project.vercel.app`
+
+#### Méthode 2 : GitHub Actions (Alternative)
+
+Si vous préférez utiliser GitHub Actions pour le déploiement, configurez les secrets suivants dans votre dépôt GitHub :
+
+1. **Obtenir les identifiants Vercel:**
+   - Allez sur [Vercel Settings > Tokens](https://vercel.com/account/tokens)
+   - Créez un nouveau token et copiez-le
+   - Allez dans les paramètres de votre projet Vercel pour obtenir `ORG_ID` et `PROJECT_ID`
+
+2. **Configurer les secrets GitHub:**
+   - Allez dans `Settings > Secrets and variables > Actions` de votre dépôt GitHub
+   - Ajoutez les secrets suivants :
+     - `VERCEL_TOKEN` : votre token Vercel
+     - `VERCEL_ORG_ID` : l'ID de votre organisation Vercel
+     - `VERCEL_PROJECT_ID` : l'ID de votre projet Vercel
+
+3. **Déploiement automatique:**
+   - Le workflow `.github/workflows/vercel-deploy.yml` se déclenchera automatiquement à chaque push sur `main`
+   - Le déploiement en production sera effectué automatiquement
 
 ### Manual Deployment
 
