@@ -1,0 +1,276 @@
+{
+  "common": {
+    "copy": "Copy",
+    "copiedTitle": "Copied!",
+    "copiedDescription": "{{context}} copied to clipboard.",
+    "error": "Error",
+    "copyErrorDescription": "Unable to copy to clipboard.",
+    "json": "JSON",
+    "clear": "Clear",
+    "save": "Save",
+    "import": "Import",
+    "generate": "Generate",
+    "loading": "Loading...",
+    "success": "Success",
+    "failed": "Failed"
+  },
+  "layout": {
+    "appName": "My Data Toolbox",
+    "navigation": {
+      "anonymize": "Anonymize",
+      "generate": "Generate", 
+      "swagger": "Swagger Spec",
+      "swaggerToJson": "Swagger JSON",
+      "validator": "Validate",
+      "jsonpath": "JSONPath"
+    },
+    "descriptions": {
+      "anonymize": "Anonymize JSON data, masking or replacing sensitive fields to protect privacy.",
+      "generate": "Generate synthetic JSON data based on your schema or example for testing and development.",
+      "swagger": "Generate a Swagger (OpenAPI) specification from a sample JSON payload.",
+      "swaggerToJson": "Generate example JSON payloads directly from a Swagger/OpenAPI specification.",
+      "validator": "Validate JSON documents against a specified schema to ensure correctness.",
+      "jsonpath": "Extract data from JSON using JSONPath expressions."
+    },
+    "account": {
+      "title": "Account",
+      "description": "Manage your profile and synchronize settings between web & desktop (coming soon).",
+      "featureInDevelopment": "Feature under development."
+    },
+    "about": {
+      "title": "About My Data Toolbox",
+      "version": "Version {{version}}",
+      "contact": "You can reach us at",
+      "checkUpdates": "Check for updates",
+      "checkingUpdates": "Checking for updates..."
+    }
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "tooltip": "Change theme"
+  },
+  "anonymize": {
+    "rawData": "Raw data",
+    "instruction": "Paste your production JSON here then click \"Anonymize\"",
+    "placeholder": "Paste your JSON here...",
+    "button": {
+      "anonymize": "Anonymize",
+      "clear": "Clear"
+    },
+    "resultTitle": "Anonymized result",
+    "resultLabel": "Anonymized JSON",
+    "resultPlaceholder": "The result will appear here",
+    "toast": {
+      "successTitle": "Anonymization successful",
+      "successDesc": "Sensitive data has been anonymized.",
+      "errorTitle": "Error",
+      "errorDesc": "Anonymization failed"
+    },
+    "copyToastDesc": "Anonymized JSON copied to clipboard.",
+    "noDataTitle": "No anonymized data yet.",
+    "noDataDesc": "Submit a JSON to start anonymization."
+  },
+  "generate": {
+    "skeletonTitle": "JSON Skeleton",
+    "instruction": "Paste a JSON skeleton or import a file, then click \"Generate\"",
+    "placeholder": "Paste your JSON skeleton here...",
+    "seedPlaceholder": "Seed (optional)",
+    "countPlaceholder": "Count (optional)",
+    "button": {
+      "generate": "Generate",
+      "import": "Import file",
+      "clear": "Clear"
+    },
+    "resultTitle": "Generated data", 
+    "resultLabel": "Generated JSON",
+    "resultPlaceholder": "The result will appear here",
+    "toast": {
+      "successTitle": "Data generated",
+      "successDesc": "Test data has been created successfully.",
+      "errorTitle": "Error",
+      "errorDesc": "Generation failed"
+    },
+    "copyToastDesc": "Generated JSON copied to clipboard.",
+    "noDataTitle": "No generated data yet.",
+    "noDataDesc": "Submit a JSON skeleton to start generation.",
+    "importDialog": {
+      "title": "Select a JSON skeleton"
+    }
+  },
+  "swagger": {
+    "inputTitle": "JSON Example",
+    "instruction": "Paste a JSON example to generate an OpenAPI 3.0 specification",
+    "placeholder": "Paste your JSON here...",
+    "button": {
+      "generate": "Generate",
+      "clear": "Clear"
+    },
+    "resultTitle": "OpenAPI Specification",
+    "resultLabel": "Result",
+    "resultPlaceholder": "The result will appear here",
+    "toast": {
+      "successTitle": "Specification generated",
+      "successDesc": "OpenAPI generated successfully.",
+      "errorTitle": "Error", 
+      "errorDesc": "Generation failed"
+    },
+    "copyToastDesc": "OpenAPI specification copied.",
+    "saveToastDesc": "File saved.",
+    "noDataTitle": "No specification generated yet.",
+    "noDataDesc": "Submit a JSON to start generation.",
+    "saveDialog": {
+      "title": "Save specification",
+      "defaultName": "openapi.json"
+    }
+  },
+  "swaggerToJson": {
+    "inputTitle": "Swagger / OpenAPI",
+    "instruction": "Import a Swagger/OpenAPI file then generate JSON examples",
+    "placeholder": "Swagger content loaded...",
+    "button": {
+      "import": "Import file",
+      "generate": "Generate JSON",
+      "clear": "Clear"
+    },
+    "resultTitle": "Generated JSON",
+    "resultLabel": "Result",
+    "resultPlaceholder": "The result will appear here",
+    "toast": {
+      "importTitle": "File loaded",
+      "importDesc": "Swagger/OpenAPI imported.",
+      "successTitle": "Data generated",
+      "successDesc": "JSON generated from Swagger.",
+      "errorTitle": "Error",
+      "errorDesc": "Generation failed",
+      "noSchemaError": "No schema found in this Swagger."
+    },
+    "copyToastDesc": "JSON copied.",
+    "saveToastDesc": "JSON file saved.",
+    "noDataTitle": "No JSON generated yet.",
+    "importDialog": {
+      "title": "Select a Swagger/OpenAPI file"
+    },
+    "saveDialog": {
+      "title": "Save generated JSON",
+      "defaultName": "generated.json"
+    }
+  },
+  "jsonpath": {
+    "inputTitle": "JSON Data & Expression",
+    "instruction": "Paste your JSON and enter a JSONPath expression: the result displays in real-time.",
+    "placeholder": "Paste your JSON here...",
+    "pathPlaceholder": "JSONPath expression, e.g.: $.body",
+    "button": {
+      "extract": "Extract",
+      "import": "Import file",
+      "clear": "Clear"
+    },
+    "resultTitle": "Result",
+    "resultLabel": "Extracted data",
+    "resultPlaceholder": "The result will appear here",
+    "errorLabel": "Error during extraction",
+    "instructions": {
+      "title": "JSONPath Guide",
+      "description": "Expressions and syntax to extract JSON data",
+      "basic": {
+        "title": "Basic expressions",
+        "root": "Root of JSON document",
+        "current": "Current object/element",
+        "child": "Access child property",
+        "bracket": "Access property with brackets",
+        "wildcard": "All direct elements",
+        "recursive": "Recursive search (all levels)"
+      },
+      "arrays": {
+        "title": "Arrays",
+        "all": "All array elements",
+        "index": "Element at index n",
+        "slice": "Elements from index 1 to 3",
+        "last": "Last element",
+        "condition": "Elements where price > 10"
+      },
+      "filters": {
+        "title": "Conditional filters",
+        "exists": "Elements having 'name' property",
+        "equals": "Elements where name = 'John'",
+        "regex": "Elements where name contains 'test'",
+        "multiple": "Multiple conditions with AND"
+      },
+      "examples": {
+        "title": "Practical examples",
+        "users": "All users",
+        "names": "All user names",
+        "adults": "Users over 18",
+        "emails": "All emails",
+        "first": "First active user"
+      },
+      "syntax": {
+        "title": "Reference syntax",
+        "table": {
+          "expression": "Expression",
+          "usage": "Usage"
+        },
+        "operators": {
+          "root": "the root object/element",
+          "current": "the current object/element",
+          "child": "child operator",
+          "recursive": "recursive descent. JSONPath borrows this syntax from E4X.",
+          "wildcard": "wildcard. All objects/elements regardless their names.",
+          "subscript": "subscript operator. XPath uses it to iterate over element collections and for predicates. In Javascript and JSON it is the native array operator.",
+          "filter": "applies a filter (script) expression.",
+          "script": "script expression, using the underlying script engine."
+        }
+      },
+      "testCases": {
+        "title": "JSONPath test cases",
+        "case1": "Select the document node",
+        "case2": "Select the 'employees' element",
+        "case3": "Select all 'employee' elements that are direct children of 'employees'",
+        "case4": "Select all 'id' elements regardless of their positions",
+        "case5": "Select the 'id' attribute of the first 'employee'"
+      }
+    },
+    "toast": {
+      "errorTitle": "Error",
+      "errorDesc": "Import failed",
+      "extractionError": "Extraction failed"
+    },
+    "copyToastDesc": "Result copied to clipboard.",
+    "noDataTitle": "No result yet.",
+    "noDataDesc": "Submit a JSON and a JSONPath expression to start extraction.",
+    "importDialog": {
+      "title": "Select a JSON file"
+    }
+  },
+  "validator": {
+    "inputTitle": "JSON Input",
+    "inputDescription": "Paste your JSON here to validate and format it",
+    "placeholder": "Paste your JSON here...",
+    "button": {
+      "validate": "Validate JSON",
+      "import": "Import file"
+    },
+    "toastValidTitle": "Valid JSON",
+    "toastValidDesc": "Your JSON is properly formatted.",
+    "toastInvalidTitle": "Invalid JSON",
+    "toastInvalidDesc": "Please correct the errors in your JSON.",
+    "result": {
+      "valid": "Result - Valid JSON",
+      "invalid": "Result - Invalid JSON",
+      "title": "Result"
+    },
+    "description": {
+      "valid": "Formatted and validated JSON",
+      "invalid": "Validation errors detected",
+      "placeholder": "The result will appear here after validation"
+    },
+    "badge": {
+      "valid": "Valid",
+      "invalid": "Invalid"
+    },
+    "save": "Save",
+    "noJson": "No JSON to validate",
+    "submitToValidate": "Paste your JSON and click \"Validate\""
+  }
+} 

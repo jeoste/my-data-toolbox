@@ -1,0 +1,277 @@
+{
+  "common": {
+    "copy": "Copier",
+    "copiedTitle": "Copié !",
+    "copiedDescription": "{{context}} copié dans le presse-papiers.",
+    "error": "Erreur",
+    "copyErrorDescription": "Impossible de copier dans le presse-papiers.",
+    "json": "JSON",
+    "clear": "Effacer",
+    "save": "Sauvegarder",
+    "import": "Importer",
+    "generate": "Générer",
+    "loading": "Chargement...",
+    "success": "Succès",
+    "failed": "Échec"
+  },
+  "layout": {
+    "appName": "My Data Toolbox",
+    "navigation": {
+      "anonymize": "Anonymize",
+      "generate": "Generate", 
+      "swagger": "Swagger Spec",
+      "swaggerToJson": "Swagger JSON",
+      "validator": "Validate",
+      "jsonpath": "JSONPath"
+    },
+    "descriptions": {
+      "anonymize": "Anonymisez les données d'un JSON venant de l'environnement de production en masquant ou remplaçant tous les champs sensibles et protéger vos données.",
+      "generate": "Générez des \"vraies fausses\" données JSON basées sur votre schéma ou un exemple afin de tester vos API en développement.",
+      "swagger": "Générez une spécification OAS (OpenAPI) à partir d'un schéma JSON valide.",
+      "swaggerToJson": "Générez des \" vraies fausses\" données d'exemple à partir d'une spécification OAS (OpenAPI).",
+      "validator": "Validez votre structure JSON.",
+      "jsonpath": "Chemin d'extraction de données de votre JSON en utilisant des expressions JSONPath.",
+      "jsonpathDesc": "JSONPath est un langage de requête pour JSON. Il permet d'extraire des données de JSON en utilisant des expressions."
+    },
+    "account": {
+      "title": "Compte",
+      "description": "Gérez votre profil et synchronisez les paramètres entre web et bureau (bientôt disponible).",
+      "featureInDevelopment": "Fonctionnalité en cours de développement."
+    },
+    "about": {
+      "title": "À propos de My Data Toolbox",
+      "version": "Version {{version}}",
+      "contact": "Vous pouvez nous contacter à",
+      "checkUpdates": "Vérifier les mises à jour",
+      "checkingUpdates": "Vérification en cours..."
+    }
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "tooltip": "Changer le thème"
+  },
+  "anonymize": {
+    "rawData": "Données brutes",
+    "instruction": "Collez ici votre JSON provenant de la production puis cliquez sur \"Anonymize\"",
+    "placeholder": "Collez votre JSON ici...",
+    "button": {
+      "anonymize": "Anonymize",
+      "clear": "Effacer"
+    },
+    "resultTitle": "Résultat anonymisé",
+    "resultLabel": "JSON anonymisé",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "toast": {
+      "successTitle": "Anonymisation réussie",
+      "successDesc": "Les données sensibles ont été anonymisées.",
+      "errorTitle": "Erreur",
+      "errorDesc": "Anonymisation échouée"
+    },
+    "copyToastDesc": "JSON anonymisé copié dans le presse-papiers.",
+    "noDataTitle": "Aucune donnée anonymisée pour le moment.",
+    "noDataDesc": "Soumettez un JSON pour lancer l'anonymisation."
+  },
+  "generate": {
+    "skeletonTitle": "Squelette JSON",
+    "instruction": "Collez un squelette JSON ou importez un fichier, puis cliquez sur « Generate »",
+    "placeholder": "Collez votre squelette JSON ici...",
+    "seedPlaceholder": "Seed (optionnel)",
+    "countPlaceholder": "Count (optionnel)",
+    "button": {
+      "generate": "Generate",
+      "import": "Importer fichier",
+      "clear": "Effacer"
+    },
+    "resultTitle": "Données générées", 
+    "resultLabel": "JSON généré",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "toast": {
+      "successTitle": "Données générées",
+      "successDesc": "Les données de test ont été créées avec succès.",
+      "errorTitle": "Erreur",
+      "errorDesc": "Génération échouée"
+    },
+    "copyToastDesc": "JSON généré copié dans le presse-papiers.",
+    "noDataTitle": "Aucune donnée générée pour le moment.",
+    "noDataDesc": "Soumettez un squelette JSON pour lancer la génération.",
+    "importDialog": {
+      "title": "Sélectionner un squelette JSON"
+    }
+  },
+  "swagger": {
+    "inputTitle": "Exemple JSON",
+    "instruction": "Collez un exemple JSON pour générer une spécification OpenAPI 3.0",
+    "placeholder": "Collez votre JSON ici...",
+    "button": {
+      "generate": "Generate",
+      "clear": "Effacer"
+    },
+    "resultTitle": "Spécification OpenAPI",
+    "resultLabel": "Résultat",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "toast": {
+      "successTitle": "Spécification générée",
+      "successDesc": "OpenAPI généré avec succès.",
+      "errorTitle": "Erreur", 
+      "errorDesc": "Génération échouée"
+    },
+    "copyToastDesc": "Spécification OpenAPI copiée.",
+    "saveToastDesc": "Fichier enregistré.",
+    "noDataTitle": "Aucune spécification générée pour le moment.",
+    "noDataDesc": "Soumettez un JSON pour lancer la génération.",
+    "saveDialog": {
+      "title": "Sauvegarder la spécification",
+      "defaultName": "openapi.json"
+    }
+  },
+  "swaggerToJson": {
+    "inputTitle": "Swagger / OpenAPI",
+    "instruction": "Importez un fichier Swagger/OpenAPI puis générez des exemples JSON",
+    "placeholder": "Contenu Swagger chargé...",
+    "button": {
+      "import": "Importer fichier",
+      "generate": "Generate JSON",
+      "clear": "Effacer"
+    },
+    "resultTitle": "JSON généré",
+    "resultLabel": "Résultat",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "toast": {
+      "importTitle": "Fichier chargé",
+      "importDesc": "Swagger/OpenAPI importé.",
+      "successTitle": "Données générées",
+      "successDesc": "JSON généré à partir du Swagger.",
+      "errorTitle": "Erreur",
+      "errorDesc": "Génération échouée",
+      "noSchemaError": "Aucun schéma trouvé dans ce Swagger."
+    },
+    "copyToastDesc": "JSON copié.",
+    "saveToastDesc": "Fichier JSON enregistré.",
+    "noDataTitle": "Aucun JSON généré pour le moment.",
+    "importDialog": {
+      "title": "Sélectionner un fichier Swagger/OpenAPI"
+    },
+    "saveDialog": {
+      "title": "Sauvegarder le JSON généré",
+      "defaultName": "generated.json"
+    }
+  },
+  "jsonpath": {
+    "inputTitle": "Données JSON & Expression",
+    "instruction": "Collez votre JSON et saisissez une expression JSONPath : le résultat s'affiche en temps réel.",
+    "placeholder": "Collez votre JSON ici...",
+    "pathPlaceholder": "Expression JSONPath, ex: $.body",
+    "button": {
+      "extract": "Extraire",
+      "import": "Importer fichier",
+      "clear": "Effacer"
+    },
+    "resultTitle": "Résultat",
+    "resultLabel": "Données extraites",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "errorLabel": "Erreur lors de l'extraction",
+    "instructions": {
+      "title": "Guide JSONPath",
+      "description": "Expressions et syntaxe pour extraire des données JSON",
+      "basic": {
+        "title": "Expressions de base",
+        "root": "Racine du document JSON",
+        "current": "Objet/élément actuel",
+        "child": "Accéder à une propriété enfant",
+        "bracket": "Accéder à une propriété avec crochets",
+        "wildcard": "Tous les éléments directs",
+        "recursive": "Recherche récursive (tous niveaux)"
+      },
+      "arrays": {
+        "title": "Tableaux",
+        "all": "Tous les éléments du tableau",
+        "index": "Élément à l'index n",
+        "slice": "Éléments de l'index 1 à 3",
+        "last": "Dernier élément",
+        "condition": "Éléments où price > 10"
+      },
+      "filters": {
+        "title": "Filtres conditionnels",
+        "exists": "Éléments ayant la propriété 'name'",
+        "equals": "Éléments où name = 'John'",
+        "regex": "Éléments où name contient 'test'",
+        "multiple": "Conditions multiples avec ET"
+      },
+      "examples": {
+        "title": "Exemples pratiques",
+        "users": "Tous les utilisateurs",
+        "names": "Tous les noms d'utilisateurs",
+        "adults": "Utilisateurs de plus de 18 ans",
+        "emails": "Tous les emails",
+        "first": "Premier utilisateur actif"
+      },
+      "syntax": {
+        "title": "Syntaxe de référence",
+        "table": {
+          "expression": "Expression",
+          "usage": "Utilisation"
+        },
+        "operators": {
+          "root": "l'objet/élément racine",
+          "current": "l'objet/élément actuel",
+          "child": "opérateur enfant",
+          "recursive": "descente récursive. JSONPath emprunte cette syntaxe à E4X.",
+          "wildcard": "joker. Tous les objets/éléments quel que soit leur nom.",
+          "subscript": "opérateur d'indice. XPath l'utilise pour itérer sur les collections d'éléments et pour les prédicats. En Javascript et JSON, c'est l'opérateur de tableau natif.",
+          "filter": "applique une expression de filtre (script).",
+          "script": "expression de script, utilisant le moteur de script sous-jacent."
+        }
+      },
+      "testCases": {
+        "title": "Cas de test JSONPath",
+        "case1": "Sélectionner le nœud document",
+        "case2": "Sélectionner l'élément 'employees'",
+        "case3": "Sélectionner tous les éléments 'employee' enfants directs de 'employees'",
+        "case4": "Sélectionner tous les éléments 'id' quelle que soit leur position",
+        "case5": "Sélectionner l'attribut 'id' du premier 'employee'"
+      }
+    },
+    "toast": {
+      "errorTitle": "Erreur",
+      "errorDesc": "Import échoué",
+      "extractionError": "Extraction échouée"
+    },
+    "copyToastDesc": "Résultat copié dans le presse-papiers.",
+    "noDataTitle": "Aucun résultat pour le moment.",
+    "noDataDesc": "Soumettez un JSON et une expression JSONPath pour lancer l'extraction.",
+    "importDialog": {
+      "title": "Sélectionner un fichier JSON"
+    }
+  },
+  "validator": {
+    "inputTitle": "Saisie JSON",
+    "inputDescription": "Collez votre JSON ici pour le valider et le formater",
+    "placeholder": "Collez votre JSON ici...",
+    "button": {
+      "validate": "Valider JSON",
+      "import": "Importer fichier"
+    },
+    "toastValidTitle": "JSON valide",
+    "toastValidDesc": "Votre JSON est correctement formaté.",
+    "toastInvalidTitle": "JSON invalide",
+    "toastInvalidDesc": "Veuillez corriger les erreurs dans votre JSON.",
+    "result": {
+      "valid": "Résultat - JSON Valide",
+      "invalid": "Résultat - JSON Invalide",
+      "title": "Résultat"
+    },
+    "description": {
+      "valid": "JSON formaté et validé",
+      "invalid": "Erreurs de validation détectées",
+      "placeholder": "Le résultat apparaîtra ici après validation"
+    },
+    "badge": {
+      "valid": "Valide",
+      "invalid": "Invalide"
+    },
+    "save": "Sauvegarder",
+    "noJson": "Aucun JSON à valider",
+    "submitToValidate": "Collez votre JSON et cliquez sur \"Valider\""
+  }
+} 

@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+electron/node_modules/
+
+# Electron app (not needed for web deployment)
+electron/
+dist-electron/
+
+# Development files
+*.log
+.DS_Store
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test files
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Build artifacts (will be generated during build)
+dist/
+
+# Screenshots and docs
+screenshots/
+docs/
+
+# Git
+.git/
+.gitignore
+
+# Misc
+*.md
+!README.md
+LICENSE
+CONTRIBUTING.md
+

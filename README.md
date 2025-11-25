@@ -1,11 +1,11 @@
-# JSON Tools — JSON Data Generator & Anonymizer
+# My Data Toolbox
 
-> A modern desktop application to generate realistic JSON test data, anonymize sensitive fields, validate and query JSON, and work with Swagger/OpenAPI.
+> A modern web application to generate realistic JSON test data, anonymize sensitive fields, validate and query JSON, and work with Swagger/OpenAPI.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18.0%2B-green.svg)](https://nodejs.org)
-[![Python](https://img.shields.io/badge/Python-3.7%2B-blue.svg)](https://python.org)
-[![Electron](https://img.shields.io/badge/Electron-Desktop-lightgrey.svg)](https://electronjs.org)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://python.org)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-black.svg)](https://vercel.com)
 
 ## 📸 Screenshots
 
@@ -30,28 +30,37 @@
 
 ## 🧱 Tech Stack
 
-- Electron (main/preload), React 18 + TypeScript, Vite 5, Tailwind CSS, shadcn/ui
-- Python backend (CLI) for generation/anonymization: `faker`, `pyyaml`, `jsonschema`, `openapi-spec-validator`
+**Frontend:**
+- React 18 + TypeScript, Vite 5, Tailwind CSS, shadcn/ui
+- i18next (internationalisation), Lucide React (icônes), JSONPath-Plus
+
+**Backend:**
+- Python 3.9+ serverless functions on Vercel
+- Flask handlers for API endpoints
+- Python modules: `faker`, `pyyaml`, `jsonschema`, `openapi-spec-validator`
+
+**Infrastructure:**
+- Vercel (hosting + serverless functions)
+- GitHub (CI/CD)
 
 ## 🗂️ Project Structure
 
 ```
-json-tools/
-├─ electron/                 # Desktop app (UI + Electron)
-│  ├─ main.js               # Electron main process
-│  ├─ preload.js            # Secured IPC bridge
-│  ├─ src/                  # React app
-│  │  ├─ App.tsx
-│  │  ├─ components/
-│  │  │  ├─ views/          # Generate / Anonymize / Swagger / Validator / JSONPath
-│  │  │  └─ ui/             # shadcn/ui components
-│  │  ├─ hooks/
-│  │  ├─ locales/           # i18n resources (en, fr, ko)
-│  │  ├─ globals.css
-│  │  └─ main.tsx
-│  └─ package.json
-├─ src/                     # Python backend (CLI)
-│  ├─ cli_generate.py       # Entry point for generation/anonymization
+my-data-toolbox/
+├─ api/                     # Vercel serverless functions (Python)
+│  ├─ generate.py          # POST /api/generate
+│  ├─ anonymize.py         # POST /api/anonymize
+│  └─ analyze.py           # POST /api/analyze
+├─ src/                     # Frontend React (Web)
+│  ├─ components/
+│  │  ├─ views/            # Generate / Anonymize / Swagger / Validator / JSONPath
+│  │  └─ ui/               # shadcn/ui components
+│  ├─ hooks/
+│  ├─ locales/             # i18n resources (en, fr, ko)
+│  ├─ lib/                  # API client, utilities
+│  ├─ globals.css
+│  └─ main.tsx
+├─ lib/                     # Python modules (shared)
 │  ├─ data_generator.py
 │  ├─ data_anonymizer.py
 │  ├─ json_processor.py
@@ -64,73 +73,162 @@ json-tools/
 ## 🔧 Prerequisites
 
 - Node.js 18.0+ (required by Vite 5)
-- Python 3.7+ (recommended 3.10/3.11)
-- Windows 10+ / macOS / Linux
+- Python 3.9+ (for local development)
+- npm or yarn
 
 ## 🚀 Quick Start (Development)
 
-From the repository root:
+### Local Development
 
-```powershell
-npm run install          # installs Electron app dependencies (inside ./electron)
-npm run electron:dev     # starts Vite dev server + launches Electron
+1. Install dependencies:
+```bash
+npm install
 ```
 
-Notes
-- On first run, Python dependencies from `requirements.txt` may be installed automatically by the app (dev mode). If needed, install them manually:
-  ```powershell
-  py -m pip install -r requirements.txt
-  ```
-- The UI runs on `http://localhost:5173` and Electron opens it automatically.
+2. Install Python dependencies (for local testing):
+```bash
+pip install -r requirements.txt
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+### Testing Serverless Functions Locally
+
+To test the Python serverless functions locally, use Vercel CLI:
+
+```bash
+npm install -g vercel
+vercel dev
+```
+
+This will start a local server that simulates the Vercel environment.
 
 ## 📦 Build & Distribution
 
-- Build UI only (Vite production build):
-  ```powershell
-  npm run build
-  ```
-- Build Windows installer (Electron Builder):
-  ```powershell
-  cd electron
-  npm run electron:build-win
-  ```
-  The installer will be generated in `electron/dist-electron/`.
-
-> Auto-update: enabled by default in packaged builds. To disable, set `DISABLE_UPDATES=true`. See `electron/UPDATE-SYSTEM-SUMMARY.md` and `docs/RELEASE.md`.
-
-## 🖥️ Using the Python CLI directly
-
-Run the CLI without the UI for automation or testing.
-
-- Generate from skeleton:
-  ```powershell
-  py .\src\cli_generate.py --skeleton .\examples\skeleton_example.json --pretty
-  ```
-- Generate with Swagger/OpenAPI constraints:
-  ```powershell
-  py .\src\cli_generate.py --skeleton .\examples\skeleton_example.json --swagger .\examples\swagger_example.yaml --pretty
-  ```
-- Anonymize a JSON file:
-  ```powershell
-  py .\src\cli_generate.py --anonymize .\examples\test_anonymization.json --pretty
-  ```
-- Analyze sensitive fields:
-  ```powershell
-  py .\src\cli_generate.py --analyze .\examples\user_example.json --pretty
-  ```
-
-## 🧪 Available NPM Scripts (root)
+### Build for Production
 
 ```bash
-npm run install         # cd electron && npm install
-npm run dev             # cd electron && npm run dev (Vite only)
-npm run electron:dev    # cd electron && npm run electron:dev (Electron + Vite)
-npm run build           # cd electron && npm run build (Vite build)
+npm run build
 ```
 
-> For packaging, use the commands from the `electron/` directory (e.g., `npm run electron:dist`, `npm run electron:build`, `npm run electron:build-win`).
+This creates an optimized production build in the `dist/` directory.
 
-> Tip: prefer `npm run electron:dev` during development.
+### Deploy to Vercel
+
+1. **Connect your repository:**
+   - Push your code to GitHub
+   - Import your repository in [Vercel](https://vercel.com)
+   - Vercel will automatically detect the project settings
+
+2. **Configure environment variables (if needed):**
+   - Go to your project settings in Vercel
+   - Add any required environment variables
+
+3. **Deploy:**
+   - Vercel will automatically deploy on every push to the main branch
+   - Preview deployments are created for pull requests
+
+The application will be available at `https://your-project.vercel.app`
+
+### Manual Deployment
+
+```bash
+npm install -g vercel
+vercel
+```
+
+## 🧪 Available NPM Scripts
+
+```bash
+npm run dev      # Start development server (Vite)
+npm run build    # Build for production
+npm run preview  # Preview production build locally
+npm run lint     # Run ESLint
+```
+
+## 🌐 API Endpoints
+
+The application exposes the following REST API endpoints:
+
+### POST /api/generate
+
+Generate JSON data from a skeleton.
+
+**Request:**
+```json
+{
+  "skeleton": { ... },
+  "swagger": { ... },  // optional
+  "options": {
+    "count": 5,
+    "seed": 42,
+    "locale": "en_US"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": { ... },
+  "metadata": {
+    "generatedAt": "2025-11-25T10:30:00Z",
+    "itemCount": 5
+  }
+}
+```
+
+### POST /api/anonymize
+
+Anonymize sensitive data in JSON.
+
+**Request:**
+```json
+{
+  "data": { ... },
+  "options": {
+    "locale": "en_US"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": { ... },
+  "metadata": {
+    "anonymizedFields": 12,
+    "processedAt": "2025-11-25T10:30:00Z"
+  }
+}
+```
+
+### POST /api/analyze
+
+Analyze sensitive fields in JSON data.
+
+**Request:**
+```json
+{
+  "data": { ... }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "sensitiveFields": ["user.email", "user.phone"],
+  "totalFields": 2
+}
+```
 
 ## 🗺️ Roadmap
 
@@ -138,9 +236,19 @@ See `docs/plan.md` for the current roadmap (accounts, sync, updates, tests, etc.
 
 ## 🛠️ Troubleshooting
 
-- “Python not found”: Install Python from `https://python.org`, check “Add Python to PATH”, restart the terminal.
-- “npm command not found”: Install Node.js from `https://nodejs.org`, then verify with `node --version`.
-- App won’t start: ensure `npm run install` succeeded, Python and Node meet version requirements, and check the console logs.
+- **"npm command not found"**: Install Node.js from `https://nodejs.org`, then verify with `node --version`.
+- **Build fails**: Ensure Node.js 18+ is installed and all dependencies are installed with `npm install`.
+- **API errors**: Check browser console for error messages. Ensure the serverless functions are properly deployed on Vercel.
+- **Local development issues**: Make sure Vite dev server is running on port 5173. Check for port conflicts.
+
+## 🔄 Migration from Electron Version
+
+If you were using the Electron desktop version:
+
+- **File operations**: Now handled via browser File API (drag-and-drop or file picker)
+- **No local file system access**: Files must be imported/exported through the browser
+- **Same functionality**: All features are preserved, just accessed through a web interface
+- **Better accessibility**: Works on any device with a modern browser
 
 ## 🙌 Acknowledgments
 
@@ -155,6 +263,6 @@ MIT — see `LICENSE`.
 
 ## 💬 Support
 
-- Issues: `https://github.com/jeoste/json-tools/issues`
-- Discussions: `https://github.com/jeoste/json-tools/discussions`
+- Issues: `https://github.com/jeoste/my-data-toolbox/issues`
+- Discussions: `https://github.com/jeoste/my-data-toolbox/discussions`
 - Contact: jeoffrey.stephan.pro@gmail.com 

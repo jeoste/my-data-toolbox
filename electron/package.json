@@ -1,7 +1,7 @@
 {
-  "name": "json-tools-electron",
+  "name": "my-data-toolbox",
   "version": "0.1.0",
-  "description": "JSON Tools - All-in-one tools for JSON powered by Electron",
+  "description": "My Data Toolbox",
   "main": "main.js",
   "scripts": {
     "dev": "vite",
@@ -60,15 +60,15 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "build": {
-    "appId": "com.json-tools.json-generator",
-    "productName": "JSON Tools",
+    "appId": "com.my-data-toolbox.generator",
+    "productName": "My Data Toolbox",
     "copyright": "Copyright © 2025 jeoste",
     "icon": "assets/json-tools-logo.ico",
     "publish": [
       {
         "provider": "github",
         "owner": "jeoste",
-        "repo": "json-tools"
+        "repo": "my-data-toolbox"
       }
     ],
     "directories": {
@@ -125,7 +125,7 @@
           ]
         }
       ],
-      "artifactName": "JSON-Tools-Setup-${version}.${ext}",
+      "artifactName": "My-Data-Toolbox-Setup-${version}.${ext}",
       "publisherName": "jeoste",
       "verifyUpdateCodeSignature": false,
       "requestedExecutionLevel": "asInvoker"
@@ -136,8 +136,8 @@
       "allowElevation": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "JSON Tools",
-      "artifactName": "JSON-Tools-Setup-${version}.${ext}",
+      "shortcutName": "My Data Toolbox",
+      "artifactName": "My-Data-Toolbox-Setup-${version}.${ext}",
       "deleteAppDataOnUninstall": false
     }
   }
