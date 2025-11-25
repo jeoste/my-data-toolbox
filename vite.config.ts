@@ -11,12 +11,11 @@ export default defineConfig({
     react(),
   ],
   resolve: {
-    alias: [
-      { find: '@', replacement: path.resolve(__dirname, 'src') },
-      { find: '@libs', replacement: path.resolve(__dirname, 'src/lib') },
-      // Permet les imports absolus "src/..."
-      { find: 'src', replacement: path.resolve(__dirname, 'src') },
-    ],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@libs': path.resolve(__dirname, './src/lib'),
+    },
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
   },
   build: {
     outDir: 'dist',
