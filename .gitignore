@@ -14,7 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -168,3 +167,11 @@ release/
 *.exe
 *.dmg
 *.AppImage
+
+# Node.js dependencies (not tracked in git)
+node_modules/
+electron/node_modules/
+
+# Frontend TypeScript libs (must be tracked for Vercel build)
+!src/lib/
+!src/lib/**
