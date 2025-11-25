@@ -8,8 +8,13 @@ import { SwaggerView } from '@/components/views/swagger-view'
 import { ValidatorView } from '@/components/views/validator-view'
 import { GenerateFromSwaggerView } from '@/components/views/generate-from-swagger-view'
 import { JsonPathView } from '@/components/views/jsonpath-view'
+import { XmlValidateView } from '@/components/views/xml-validate-view'
+import { XmlPathView } from '@/components/views/xml-path-view'
+import { GenerateXmlView } from '@/components/views/generate-xml-view'
+import { RandomJsonView } from '@/components/views/random-json-view'
+import { RandomXmlView } from '@/components/views/random-xml-view'
 
-export type ViewType = 'anonymize' | 'generate' | 'swagger' | 'swaggerToJson' | 'validator' | 'jsonpath'
+export type ViewType = 'anonymize' | 'generate' | 'swagger' | 'swaggerToJson' | 'validator' | 'jsonpath' | 'xmlValidate' | 'xmlPath' | 'generateXml' | 'randomJson' | 'randomXml'
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewType>('generate')
@@ -28,6 +33,16 @@ function App() {
         return <GenerateFromSwaggerView />
       case 'jsonpath':
         return <JsonPathView />
+      case 'xmlValidate':
+        return <XmlValidateView />
+      case 'xmlPath':
+        return <XmlPathView />
+      case 'generateXml':
+        return <GenerateXmlView />
+      case 'randomJson':
+        return <RandomJsonView />
+      case 'randomXml':
+        return <RandomXmlView />
       default:
         return <GenerateView />
     }

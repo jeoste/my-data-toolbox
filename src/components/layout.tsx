@@ -1,20 +1,17 @@
-import { Lock, Zap, FileText, CheckCircle, Search, Info, User, Download } from 'lucide-react'
+import { Lock, Zap, FileText, CheckCircle, Search, ChevronDown, ChevronRight, Code2, FileCode, Shuffle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ViewType } from '@/App'
 import logoPng from '@/assets/logo.png'
 import { cn } from '@/lib/utils'
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
 import { LanguageSelector } from '@/components/language-selector'
 import { ThemeSelector } from '@/components/theme-selector'
 import { useTranslation } from 'react-i18next'
-import { useUpdater } from '@/hooks/use-updater'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
+import { useState } from 'react'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -22,40 +19,106 @@ interface LayoutProps {
   onViewChange: (view: ViewType) => void
 }
 
+interface NavigationItem {
+  key: ViewType
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+}
+
+interface NavigationCategory {
+  category: string
+  icon: React.ComponentType<{ className?: string }>
+  tools: NavigationItem[]
+}
+
 export function Layout({ children, currentView, onViewChange }: LayoutProps) {
   const { t } = useTranslation()
-  const { isCheckingForUpdates, updateStatus, appVersion, checkForUpdates } = useUpdater()
-  
-  const navigationItems = [
-    {
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({
+    JSON: true,
+    XML: true,
+  })
+
+  const allTools: Record<ViewType, NavigationItem> = {
+    anonymize: {
       key: 'anonymize' as ViewType,
       label: t('layout.navigation.anonymize'),
       icon: Lock,
     },
-    {
+    generate: {
       key: 'generate' as ViewType,
       label: t('layout.navigation.generate'),
       icon: Zap,
     },
-    {
+    swagger: {
       key: 'swagger' as ViewType,
       label: t('layout.navigation.swagger'),
       icon: FileText,
     },
-    {
+    swaggerToJson: {
       key: 'swaggerToJson' as ViewType,
       label: t('layout.navigation.swaggerToJson'),
       icon: FileText,
     },
-    {
+    validator: {
       key: 'validator' as ViewType,
       label: t('layout.navigation.validator'),
       icon: CheckCircle,
     },
-    {
+    jsonpath: {
       key: 'jsonpath' as ViewType,
       label: t('layout.navigation.jsonpath'),
       icon: Search,
+    },
+    xmlValidate: {
+      key: 'xmlValidate' as ViewType,
+      label: t('layout.navigation.xmlValidate'),
+      icon: CheckCircle,
+    },
+    xmlPath: {
+      key: 'xmlPath' as ViewType,
+      label: t('layout.navigation.xmlPath'),
+      icon: Search,
+    },
+    generateXml: {
+      key: 'generateXml' as ViewType,
+      label: t('layout.navigation.generateXml'),
+      icon: Zap,
+    },
+    randomJson: {
+      key: 'randomJson' as ViewType,
+      label: t('layout.navigation.randomJson'),
+      icon: Shuffle,
+    },
+    randomXml: {
+      key: 'randomXml' as ViewType,
+      label: t('layout.navigation.randomXml'),
+      icon: Shuffle,
+    },
+  }
+
+  const navigationCategories: NavigationCategory[] = [
+    {
+      category: 'JSON',
+      icon: Code2,
+      tools: [
+        allTools.generate,
+        allTools.randomJson,
+        allTools.anonymize,
+        allTools.validator,
+        allTools.jsonpath,
+        allTools.swagger,
+        allTools.swaggerToJson,
+      ],
+    },
+    {
+      category: 'XML',
+      icon: FileCode,
+      tools: [
+        allTools.generateXml,
+        allTools.randomXml,
+        allTools.xmlValidate,
+        allTools.xmlPath,
+      ],
     },
   ]
 
@@ -66,11 +129,22 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
     swaggerToJson: t('layout.descriptions.swaggerToJson'),
     validator: t('layout.descriptions.validator'),
     jsonpath: t('layout.descriptions.jsonpath'),
+    xmlValidate: t('layout.descriptions.xmlValidate'),
+    xmlPath: t('layout.descriptions.xmlPath'),
+    generateXml: t('layout.descriptions.generateXml'),
+    randomJson: t('layout.descriptions.randomJson'),
+    randomXml: t('layout.descriptions.randomXml'),
   }
 
   const getViewTitle = (view: ViewType) => {
-    const item = navigationItems.find(item => item.key === view)
-    return item?.label || t('layout.appName')
+    return allTools[view]?.label || t('layout.appName')
+  }
+
+  const toggleCategory = (category: string) => {
+    setOpenCategories(prev => ({
+      ...prev,
+      [category]: !prev[category],
+    }))
   }
 
   return (
@@ -87,24 +161,54 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
             <h1 className="text-xl font-medium">{t('layout.appName')}</h1>
           </div>
           
-          <nav className="space-y-2">
-            {navigationItems.map((item) => {
-              const Icon = item.icon
+          <nav className="space-y-1">
+            {navigationCategories.map((category) => {
+              const CategoryIcon = category.icon
+              const isOpen = openCategories[category.category]
               return (
-                <Button
-                  key={item.key}
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start font-normal",
-                    currentView === item.key
-                      ? "border-l-4 border-primary bg-primary/10 text-primary"
-                      : "text-muted-foreground"
-                  )}
-                  onClick={() => onViewChange(item.key)}
+                <Collapsible
+                  key={category.category}
+                  open={isOpen}
+                  onOpenChange={() => toggleCategory(category.category)}
                 >
-                  <Icon className="w-4 h-4 mr-2" />
-                  {item.label}
-                </Button>
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between font-semibold text-sm text-foreground hover:bg-accent"
+                    >
+                      <div className="flex items-center">
+                        <CategoryIcon className="w-4 h-4 mr-2" />
+                        {category.category}
+                      </div>
+                      {isOpen ? (
+                        <ChevronDown className="w-4 h-4" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="space-y-1 pl-4">
+                    {category.tools.map((tool) => {
+                      const ToolIcon = tool.icon
+                      return (
+                        <Button
+                          key={tool.key}
+                          variant="ghost"
+                          className={cn(
+                            "w-full justify-start font-normal",
+                            currentView === tool.key
+                              ? "border-l-4 border-primary bg-primary/10 text-primary"
+                              : "text-muted-foreground"
+                          )}
+                          onClick={() => onViewChange(tool.key)}
+                        >
+                          <ToolIcon className="w-4 h-4 mr-2" />
+                          {tool.label}
+                        </Button>
+                      )
+                    })}
+                  </CollapsibleContent>
+                </Collapsible>
               )
             })}
           </nav>
@@ -114,98 +218,6 @@ export function Layout({ children, currentView, onViewChange }: LayoutProps) {
             <LanguageSelector />
             <ThemeSelector />
           </div>
-        </div>
-
-        {/* Account & About section */}
-        <div className="border-t border-border pt-2">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                className="w-full justify-start font-normal text-muted-foreground hover:text-foreground"
-              >
-                <User className="w-4 h-4 mr-2" />
-                {t('layout.account.title')}
-              </Button>
-            </SheetTrigger>
-          <SheetContent side="bottom" className="sm:max-w-lg">
-            <SheetHeader>
-              <SheetTitle>{t('layout.account.title')}</SheetTitle>
-              <SheetDescription>
-                {t('layout.account.description')}
-              </SheetDescription>
-            </SheetHeader>
-            <div className="mt-4 space-y-4">
-              <p>{t('layout.account.featureInDevelopment')}</p>
-            </div>
-          </SheetContent>
-        </Sheet>
-
-          {/* About section */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                className="w-full justify-start font-normal text-muted-foreground hover:text-foreground"
-              >
-                <Info className="w-4 h-4 mr-2" />
-                {t('layout.about.title')}
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="bottom" className="sm:max-w-lg">
-              <SheetHeader>
-                <SheetTitle>{t('layout.about.title')}</SheetTitle>
-                <SheetDescription>
-                  {t('layout.about.version', { version: appVersion })}
-                </SheetDescription>
-              </SheetHeader>
-              <div className="mt-4 space-y-4">
-                <p>{t('layout.about.contact')} <a href="mailto:contact@neungbo.com" className="underline text-primary">contact@neungbo.com</a>.</p>
-                
-                {/* Update Status */}
-                {updateStatus && updateStatus.message && (
-                  <div className={cn(
-                    "p-3 rounded-md border text-sm",
-                    updateStatus.status === 'error' && "border-destructive/50 bg-destructive/10 text-destructive",
-                    updateStatus.status === 'available' && "border-green-500/50 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400",
-                    updateStatus.status === 'downloading' && "border-blue-500/50 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400",
-                    updateStatus.status === 'downloaded' && "border-green-500/50 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400",
-                    (updateStatus.status === 'checking' || updateStatus.status === 'not-available') && "border-muted bg-muted/50 text-muted-foreground"
-                  )}>
-                    <p className="font-medium">
-                      {updateStatus.status === 'available' && '🆕 '}
-                      {updateStatus.status === 'downloading' && '📥 '}
-                      {updateStatus.status === 'downloaded' && '✅ '}
-                      {updateStatus.status === 'error' && '❌ '}
-                      {updateStatus.status === 'checking' && '🔍 '}
-                      {updateStatus.message}
-                    </p>
-                    {updateStatus.status === 'downloading' && updateStatus.percent && (
-                      <div className="mt-2">
-                        <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                            style={{ width: `${updateStatus.percent}%` }}
-                          ></div>
-                        </div>
-                        <p className="text-xs mt-1 opacity-70">{Math.round(updateStatus.percent || 0)}%</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-                
-                <Button 
-                  onClick={checkForUpdates}
-                  disabled={isCheckingForUpdates}
-                  className="w-full"
-                  variant={updateStatus?.status === 'available' ? 'default' : 'outline'}
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  {isCheckingForUpdates ? t('layout.about.checkingUpdates') : t('layout.about.checkUpdates')}
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
         </div>
       </aside>
 

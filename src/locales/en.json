@@ -12,7 +12,9 @@
     "generate": "Generate",
     "loading": "Loading...",
     "success": "Success",
-    "failed": "Failed"
+    "failed": "Failed",
+    "exported": "Exported",
+    "export": "Export"
   },
   "layout": {
     "appName": "My Data Toolbox",
@@ -22,7 +24,12 @@
       "swagger": "Swagger Spec",
       "swaggerToJson": "Swagger JSON",
       "validator": "Validate",
-      "jsonpath": "JSONPath"
+      "jsonpath": "JSONPath",
+      "xmlValidate": "Validate XML",
+      "xmlPath": "XPath",
+      "generateXml": "Generate XML",
+      "randomJson": "Random JSON",
+      "randomXml": "Random XML"
     },
     "descriptions": {
       "anonymize": "Anonymize JSON data, masking or replacing sensitive fields to protect privacy.",
@@ -30,7 +37,12 @@
       "swagger": "Generate a Swagger (OpenAPI) specification from a sample JSON payload.",
       "swaggerToJson": "Generate example JSON payloads directly from a Swagger/OpenAPI specification.",
       "validator": "Validate JSON documents against a specified schema to ensure correctness.",
-      "jsonpath": "Extract data from JSON using JSONPath expressions."
+      "jsonpath": "Extract data from JSON using JSONPath expressions.",
+      "xmlValidate": "Validate the structure of your XML document.",
+      "xmlPath": "Extract data from your XML using XPath expressions.",
+      "generateXml": "Generate synthetic XML data based on your XML skeleton for testing and development.",
+      "randomJson": "Generate a random JSON structure with random data without a skeleton.",
+      "randomXml": "Generate a random XML structure with random data without a skeleton."
     },
     "account": {
       "title": "Account",
@@ -272,5 +284,162 @@
     "save": "Save",
     "noJson": "No JSON to validate",
     "submitToValidate": "Paste your JSON and click \"Validate\""
+  },
+  "generateXml": {
+    "skeletonTitle": "XML Skeleton",
+    "instruction": "Paste an XML skeleton or import a file, then click \"Generate\"",
+    "placeholder": "Paste your XML skeleton here...",
+    "seedPlaceholder": "Seed (optional)",
+    "countPlaceholder": "Count (optional)",
+    "button": {
+      "generate": "Generate",
+      "import": "Import file",
+      "clear": "Clear"
+    },
+    "resultTitle": "Generated data",
+    "resultLabel": "Generated XML",
+    "resultPlaceholder": "The result will appear here",
+    "toast": {
+      "successTitle": "Data generated",
+      "successDesc": "Test data has been created successfully.",
+      "errorTitle": "Error",
+      "errorDesc": "Generation failed"
+    },
+    "copyToastDesc": "Generated XML copied to clipboard.",
+    "noDataTitle": "No generated data yet.",
+    "noDataDesc": "Submit an XML skeleton to start generation.",
+    "importDialog": {
+      "title": "Select an XML skeleton"
+    }
+  },
+  "xmlValidate": {
+    "inputTitle": "XML Input",
+    "inputDescription": "Paste your XML here to validate and format it",
+    "placeholder": "Paste your XML here...",
+    "button": {
+      "validate": "Validate XML"
+    },
+    "toastValidTitle": "Valid XML",
+    "toastValidDesc": "Your XML is properly formatted.",
+    "toastInvalidTitle": "Invalid XML",
+    "toastInvalidDesc": "Please correct the errors in your XML.",
+    "result": {
+      "valid": "Result - Valid XML",
+      "invalid": "Result - Invalid XML",
+      "title": "Result"
+    },
+    "description": {
+      "valid": "Formatted and validated XML",
+      "invalid": "Validation errors detected",
+      "placeholder": "The result will appear here after validation"
+    },
+    "badge": {
+      "valid": "Valid",
+      "invalid": "Invalid"
+    },
+    "save": "Save",
+    "noXml": "No XML to validate",
+    "submitToValidate": "Paste your XML and click \"Validate\"",
+    "structure": {
+      "rootTag": "Root tag",
+      "childCount": "Child count",
+      "childTags": "Child tags"
+    },
+    "error": {
+      "unknown": "Unknown error",
+      "line": "Line",
+      "column": "Column"
+    }
+  },
+  "xmlPath": {
+    "inputTitle": "XML Data & Expression",
+    "instruction": "Paste your XML and enter an XPath expression: the result displays in real-time.",
+    "xpathLabel": "XPath Expression",
+    "xpathPlaceholder": "XPath expression, e.g.: //user",
+    "xmlLabel": "XML Document",
+    "xmlPlaceholder": "Paste your XML here...",
+    "button": {
+      "evaluate": "Evaluate",
+      "example1": "Users Example",
+      "example2": "Employees Example"
+    },
+    "resultTitle": "Result",
+    "resultCount": "{{count}} result(s) found",
+    "instructions": {
+      "title": "XPath Guide",
+      "description": "Expressions and syntax to extract XML data",
+      "examples": "Examples",
+      "example1": "All 'user' elements",
+      "example2": "'user' elements with 'id' attribute",
+      "example3": "All 'name' elements in 'user'",
+      "example4": "'user' element with id='001'",
+      "example5": "'user' elements where age > 20"
+    },
+    "toast": {
+      "errorDesc": "Import failed",
+      "extractionError": "Extraction failed"
+    },
+    "copyToastDesc": "Result copied to clipboard.",
+    "noResult": "No result yet.",
+    "submitToEvaluate": "Paste your XML and an XPath expression to start extraction.",
+    "error": {
+      "title": "Error"
+    }
+  },
+  "randomJson": {
+    "configTitle": "Configuration",
+    "instruction": "Configure parameters to generate a random JSON structure",
+    "depthLabel": "Depth",
+    "depthPlaceholder": "Depth (1-10)",
+    "maxKeysLabel": "Max Keys",
+    "maxKeysPlaceholder": "Max keys per object",
+    "maxItemsLabel": "Max Items",
+    "maxItemsPlaceholder": "Max items per array",
+    "seedLabel": "Seed",
+    "seedPlaceholder": "Seed (optional)",
+    "button": {
+      "generate": "Generate"
+    },
+    "resultTitle": "Generated data",
+    "resultLabel": "Random JSON",
+    "resultPlaceholder": "The result will appear here",
+    "toast": {
+      "successTitle": "Data generated",
+      "successDesc": "Random JSON structure created successfully.",
+      "errorTitle": "Error",
+      "errorDesc": "Generation failed"
+    },
+    "copyToastDesc": "Random JSON copied to clipboard.",
+    "noDataTitle": "No generated data yet.",
+    "noDataDesc": "Configure parameters and click \"Generate\"."
+  },
+  "randomXml": {
+    "configTitle": "Configuration",
+    "instruction": "Configure parameters to generate a random XML structure",
+    "rootTagLabel": "Root Tag",
+    "rootTagPlaceholder": "Root tag name",
+    "depthLabel": "Depth",
+    "depthPlaceholder": "Depth (1-10)",
+    "maxChildrenLabel": "Max Children",
+    "maxChildrenPlaceholder": "Max children per element",
+    "maxItemsLabel": "Max Items",
+    "maxItemsPlaceholder": "Max repeated items",
+    "seedLabel": "Seed",
+    "seedPlaceholder": "Seed (optional)",
+    "button": {
+      "generate": "Generate"
+    },
+    "resultTitle": "Generated data",
+    "resultLabel": "Random XML",
+    "resultPlaceholder": "The result will appear here",
+    "toast": {
+      "successTitle": "Data generated",
+      "successDesc": "Random XML structure created successfully.",
+      "errorTitle": "Error",
+      "errorDesc": "Generation failed"
+    },
+    "copyToastDesc": "Random XML copied to clipboard.",
+    "noDataTitle": "No generated data yet.",
+    "noDataDesc": "Configure parameters and click \"Generate\"."
   }
 } 

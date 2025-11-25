@@ -12,7 +12,9 @@
     "generate": "Générer",
     "loading": "Chargement...",
     "success": "Succès",
-    "failed": "Échec"
+    "failed": "Échec",
+    "exported": "Exporté",
+    "export": "Exporter"
   },
   "layout": {
     "appName": "My Data Toolbox",
@@ -22,7 +24,12 @@
       "swagger": "Swagger Spec",
       "swaggerToJson": "Swagger JSON",
       "validator": "Validate",
-      "jsonpath": "JSONPath"
+      "jsonpath": "JSONPath",
+      "xmlValidate": "Valider XML",
+      "xmlPath": "XPath",
+      "generateXml": "Générer XML",
+      "randomJson": "Random JSON",
+      "randomXml": "Random XML"
     },
     "descriptions": {
       "anonymize": "Anonymisez les données d'un JSON venant de l'environnement de production en masquant ou remplaçant tous les champs sensibles et protéger vos données.",
@@ -31,7 +38,12 @@
       "swaggerToJson": "Générez des \" vraies fausses\" données d'exemple à partir d'une spécification OAS (OpenAPI).",
       "validator": "Validez votre structure JSON.",
       "jsonpath": "Chemin d'extraction de données de votre JSON en utilisant des expressions JSONPath.",
-      "jsonpathDesc": "JSONPath est un langage de requête pour JSON. Il permet d'extraire des données de JSON en utilisant des expressions."
+      "jsonpathDesc": "JSONPath est un langage de requête pour JSON. Il permet d'extraire des données de JSON en utilisant des expressions.",
+      "xmlValidate": "Validez la structure de votre document XML.",
+      "xmlPath": "Extrayez des données de votre XML en utilisant des expressions XPath.",
+      "generateXml": "Générez des \"vraies fausses\" données XML basées sur votre squelette XML afin de tester vos API en développement.",
+      "randomJson": "Générez une structure JSON aléatoire avec des données aléatoires sans squelette.",
+      "randomXml": "Générez une structure XML aléatoire avec des données aléatoires sans squelette."
     },
     "account": {
       "title": "Compte",
@@ -273,5 +285,162 @@
     "save": "Sauvegarder",
     "noJson": "Aucun JSON à valider",
     "submitToValidate": "Collez votre JSON et cliquez sur \"Valider\""
+  },
+  "generateXml": {
+    "skeletonTitle": "Squelette XML",
+    "instruction": "Collez un squelette XML ou importez un fichier, puis cliquez sur « Generate »",
+    "placeholder": "Collez votre squelette XML ici...",
+    "seedPlaceholder": "Seed (optionnel)",
+    "countPlaceholder": "Count (optionnel)",
+    "button": {
+      "generate": "Generate",
+      "import": "Importer fichier",
+      "clear": "Effacer"
+    },
+    "resultTitle": "Données générées",
+    "resultLabel": "XML généré",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "toast": {
+      "successTitle": "Données générées",
+      "successDesc": "Les données de test ont été créées avec succès.",
+      "errorTitle": "Erreur",
+      "errorDesc": "Génération échouée"
+    },
+    "copyToastDesc": "XML généré copié dans le presse-papiers.",
+    "noDataTitle": "Aucune donnée générée pour le moment.",
+    "noDataDesc": "Soumettez un squelette XML pour lancer la génération.",
+    "importDialog": {
+      "title": "Sélectionner un squelette XML"
+    }
+  },
+  "xmlValidate": {
+    "inputTitle": "Saisie XML",
+    "inputDescription": "Collez votre XML ici pour le valider et le formater",
+    "placeholder": "Collez votre XML ici...",
+    "button": {
+      "validate": "Valider XML"
+    },
+    "toastValidTitle": "XML valide",
+    "toastValidDesc": "Votre XML est correctement formaté.",
+    "toastInvalidTitle": "XML invalide",
+    "toastInvalidDesc": "Veuillez corriger les erreurs dans votre XML.",
+    "result": {
+      "valid": "Résultat - XML Valide",
+      "invalid": "Résultat - XML Invalide",
+      "title": "Résultat"
+    },
+    "description": {
+      "valid": "XML formaté et validé",
+      "invalid": "Erreurs de validation détectées",
+      "placeholder": "Le résultat apparaîtra ici après validation"
+    },
+    "badge": {
+      "valid": "Valide",
+      "invalid": "Invalide"
+    },
+    "save": "Sauvegarder",
+    "noXml": "Aucun XML à valider",
+    "submitToValidate": "Collez votre XML et cliquez sur \"Valider\"",
+    "structure": {
+      "rootTag": "Balise racine",
+      "childCount": "Nombre d'enfants",
+      "childTags": "Balises enfants"
+    },
+    "error": {
+      "unknown": "Erreur inconnue",
+      "line": "Ligne",
+      "column": "Colonne"
+    }
+  },
+  "xmlPath": {
+    "inputTitle": "Données XML & Expression",
+    "instruction": "Collez votre XML et saisissez une expression XPath : le résultat s'affiche en temps réel.",
+    "xpathLabel": "Expression XPath",
+    "xpathPlaceholder": "Expression XPath, ex: //user",
+    "xmlLabel": "Document XML",
+    "xmlPlaceholder": "Collez votre XML ici...",
+    "button": {
+      "evaluate": "Évaluer",
+      "example1": "Exemple Utilisateurs",
+      "example2": "Exemple Employés"
+    },
+    "resultTitle": "Résultat",
+    "resultCount": "{{count}} résultat(s) trouvé(s)",
+    "instructions": {
+      "title": "Guide XPath",
+      "description": "Expressions et syntaxe pour extraire des données XML",
+      "examples": "Exemples",
+      "example1": "Tous les éléments 'user'",
+      "example2": "Éléments 'user' avec attribut 'id'",
+      "example3": "Tous les éléments 'name' dans 'user'",
+      "example4": "Élément 'user' avec id='001'",
+      "example5": "Éléments 'user' où age > 20"
+    },
+    "toast": {
+      "errorDesc": "Import échoué",
+      "extractionError": "Extraction échouée"
+    },
+    "copyToastDesc": "Résultat copié dans le presse-papiers.",
+    "noResult": "Aucun résultat pour le moment.",
+    "submitToEvaluate": "Collez votre XML et une expression XPath pour lancer l'extraction.",
+    "error": {
+      "title": "Erreur"
+    }
+  },
+  "randomJson": {
+    "configTitle": "Configuration",
+    "instruction": "Configurez les paramètres pour générer une structure JSON aléatoire",
+    "depthLabel": "Profondeur",
+    "depthPlaceholder": "Profondeur (1-10)",
+    "maxKeysLabel": "Clés max",
+    "maxKeysPlaceholder": "Clés max par objet",
+    "maxItemsLabel": "Éléments max",
+    "maxItemsPlaceholder": "Éléments max par tableau",
+    "seedLabel": "Seed",
+    "seedPlaceholder": "Seed (optionnel)",
+    "button": {
+      "generate": "Générer"
+    },
+    "resultTitle": "Données générées",
+    "resultLabel": "JSON aléatoire",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "toast": {
+      "successTitle": "Données générées",
+      "successDesc": "Structure JSON aléatoire créée avec succès.",
+      "errorTitle": "Erreur",
+      "errorDesc": "Génération échouée"
+    },
+    "copyToastDesc": "JSON aléatoire copié dans le presse-papiers.",
+    "noDataTitle": "Aucune donnée générée pour le moment.",
+    "noDataDesc": "Configurez les paramètres et cliquez sur \"Générer\"."
+  },
+  "randomXml": {
+    "configTitle": "Configuration",
+    "instruction": "Configurez les paramètres pour générer une structure XML aléatoire",
+    "rootTagLabel": "Balise racine",
+    "rootTagPlaceholder": "Nom de la balise racine",
+    "depthLabel": "Profondeur",
+    "depthPlaceholder": "Profondeur (1-10)",
+    "maxChildrenLabel": "Enfants max",
+    "maxChildrenPlaceholder": "Enfants max par élément",
+    "maxItemsLabel": "Éléments max",
+    "maxItemsPlaceholder": "Éléments max répétés",
+    "seedLabel": "Seed",
+    "seedPlaceholder": "Seed (optionnel)",
+    "button": {
+      "generate": "Générer"
+    },
+    "resultTitle": "Données générées",
+    "resultLabel": "XML aléatoire",
+    "resultPlaceholder": "Le résultat apparaîtra ici",
+    "toast": {
+      "successTitle": "Données générées",
+      "successDesc": "Structure XML aléatoire créée avec succès.",
+      "errorTitle": "Erreur",
+      "errorDesc": "Génération échouée"
+    },
+    "copyToastDesc": "XML aléatoire copié dans le presse-papiers.",
+    "noDataTitle": "Aucune donnée générée pour le moment.",
+    "noDataDesc": "Configurez les paramètres et cliquez sur \"Générer\"."
   }
 } 

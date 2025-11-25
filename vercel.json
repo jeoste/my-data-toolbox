@@ -10,6 +10,14 @@
     "api/*.py": {
       "runtime": "@vercel/python@4.3.1",
       "maxDuration": 10
+    },
+    "api/generate-xml.py": {
+      "runtime": "@vercel/python@4.3.1",
+      "maxDuration": 10
+    },
+    "api/xml-path.py": {
+      "runtime": "@vercel/python@4.3.1",
+      "maxDuration": 10
     }
   }
 }
