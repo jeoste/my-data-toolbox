@@ -2,7 +2,7 @@ import { Lock, Zap, FileText, CheckCircle, Search, Info, User, Download } from '
 import { Button } from '@/components/ui/button'
 import { ViewType } from '@/App'
 import logoPng from '@/assets/logo.png'
-import { cn } from 'src/lib/utils'
+import { cn } from '@/lib/utils'
 import {
   Sheet,
   SheetTrigger,
