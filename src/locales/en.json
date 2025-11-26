@@ -14,7 +14,8 @@
     "success": "Success",
     "failed": "Failed",
     "exported": "Exported",
-    "export": "Export"
+    "export": "Export",
+    "exportSuccess": "File downloaded successfully"
   },
   "layout": {
     "appName": "My Data Toolbox",

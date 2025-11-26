@@ -114,10 +114,10 @@ export function XmlValidateView() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="container mx-auto p-4 sm:p-6 max-w-[1600px]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* Input Panel */}
-        <Card>
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
@@ -127,12 +127,12 @@ export function XmlValidateView() {
               {t('xmlValidate.inputDescription')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 flex-1 flex flex-col">
             <Textarea
               placeholder={t('xmlValidate.placeholder')}
               value={xmlInput}
               onChange={(e) => setXmlInput(e.target.value)}
-              className="min-h-[300px] font-mono text-sm"
+              className="min-h-[400px] font-mono text-sm flex-1"
             />
             <FileUpload
               accept=".xml"
@@ -162,7 +162,7 @@ export function XmlValidateView() {
         </Card>
 
         {/* Result Panel */}
-        <Card>
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {validationResult?.isValid ? (
@@ -188,10 +188,10 @@ export function XmlValidateView() {
               {!validationResult && t('xmlValidate.description.placeholder')}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex flex-col min-h-0">
             {validationResult?.isValid && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <Badge variant="secondary" className="text-green-600 dark:text-green-400">
                     <CheckCircle className="w-3 h-3 mr-1" />
                     {t('xmlValidate.badge.valid')}
@@ -223,7 +223,7 @@ export function XmlValidateView() {
                     )}
                   </div>
                 )}
-                <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[350px] text-sm">
+                <pre className="bg-muted p-4 rounded-lg overflow-auto flex-1 text-sm min-h-[600px]">
                   <code>{validationResult.formatted}</code>
                 </pre>
               </div>
@@ -253,7 +253,7 @@ export function XmlValidateView() {
             )}
             
             {!validationResult && (
-              <div className="flex items-center justify-center h-[400px] text-muted-foreground">
+              <div className="flex items-center justify-center min-h-[600px] text-muted-foreground">
                 <div className="text-center">
                   <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>{t('xmlValidate.noXml')}</p>

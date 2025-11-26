@@ -90,14 +90,17 @@ npm install
 pip install -r requirements.txt
 ```
 
-3. Start the development server:
+3. UI-only mode (Vite dev server):
 ```bash
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+The React application will be available at `http://localhost:5173`.
+In this mode, only the **frontend** is running. Calls to `/api/*` are
+expected to fail locally (404) unless they target a deployed Vercel
+environment.
 
-### Testing Serverless Functions Locally
+4. Full‑stack mode (frontend + Python serverless APIs):
 
 To test the Python serverless functions locally, use Vercel CLI:
 
@@ -106,7 +109,9 @@ npm install -g vercel
 vercel dev
 ```
 
-This will start a local server that simulates the Vercel environment.
+This will start a local server (usually `http://localhost:3000`) that
+simulates the full Vercel environment: the React app and all `/api/*.py`
+endpoints (`/api/generate`, `/api/anonymize`, etc.).
 
 ## 📦 Build & Distribution
 
@@ -260,9 +265,10 @@ See `docs/plan.md` for the current roadmap (accounts, sync, updates, tests, etc.
 
 ## 🛠️ Troubleshooting
 
-- **"npm command not found"**: Install Node.js from `https://nodejs.org`, then verify with `node --version`.
+- **\"npm command not found\"**: Install Node.js from `https://nodejs.org`, then verify with `node --version`.
 - **Build fails**: Ensure Node.js 18+ is installed and all dependencies are installed with `npm install`.
-- **API errors**: Check browser console for error messages. Ensure the serverless functions are properly deployed on Vercel.
+- **API errors in production**: Check browser console for error messages. Ensure the serverless functions are properly deployed on Vercel.
+- **API `/api/*` returning 404 in local dev**: This is expected when using `npm run dev` (frontend only). Use `vercel dev` to run the full stack locally (frontend + Python APIs), or point the app to a deployed Vercel instance.
 - **Local development issues**: Make sure Vite dev server is running on port 5173. Check for port conflicts.
 
 ## 🔄 Migration from Electron Version

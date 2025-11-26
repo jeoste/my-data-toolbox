@@ -13,67 +13,99 @@ export function AnonymizeView() {
   const [jsonInput, setJsonInput] = useState('')
   const [anonymized, setAnonymized] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [lastError, setLastError] = useState<string | null>(null)
   const { toast } = useToast()
   const { t } = useTranslation()
 
   const handleAnonymize = async () => {
+    if (!jsonInput.trim() || loading) return
+    
     setLoading(true)
+    setLastError(null)
     try {
-      // On valide d'abord le JSON localement pour un retour immédiat
-      const data = JSON.parse(jsonInput)
+      // Validate JSON locally first
+      let data
+      try {
+        data = JSON.parse(jsonInput)
+      } catch (parseError) {
+        throw new Error('Invalid JSON format')
+      }
 
       const response = await apiClient.anonymize(data)
 
       if (response?.success && response.data) {
         const formatted = JSON.stringify(response.data, null, 2)
         setAnonymized(formatted)
+        setLastError(null)
         toast({
           title: t('anonymize.toast.successTitle'),
           description: t('anonymize.toast.successDesc'),
+          variant: 'success',
         })
       } else {
-        throw new Error('Anonymization failed')
+        throw new Error(response?.error || 'Anonymization failed')
       }
     } catch (error: any) {
-      toast({
-        title: t('common.error'),
-        description: error?.message || t('anonymize.toast.errorDesc'),
-        variant: 'destructive',
-      })
+      const errorMessage = error?.message || error?.details || t('anonymize.toast.errorDesc')
+      
+      // Only show error if it's different from the last one to avoid duplicates
+      if (errorMessage !== lastError) {
+        setLastError(errorMessage)
+        console.error('Anonymization error:', error)
+        toast({
+          title: t('common.error'),
+          description: errorMessage,
+          variant: 'destructive',
+        })
+      }
     } finally {
       setLoading(false)
     }
   }
 
   const handleFileSelect = async (file: File) => {
+    if (loading) return
+    
+    setLoading(true)
+    setLastError(null)
     try {
       const content = await readFileAsText(file)
-      const data = JSON.parse(content)
+      let data
+      try {
+        data = JSON.parse(content)
+      } catch (parseError) {
+        throw new SyntaxError('Invalid JSON file')
+      }
+      
       setJsonInput(content)
 
       // Auto-anonymize after import
-      setLoading(true)
       const response = await apiClient.anonymize(data)
 
       if (response?.success && response.data) {
         const formatted = JSON.stringify(response.data, null, 2)
         setAnonymized(formatted)
+        setLastError(null)
         toast({
           title: t('anonymize.toast.successTitle'),
           description: t('anonymize.toast.successDesc'),
-        })
-      }
-    } catch (error: any) {
-      if (error instanceof SyntaxError) {
-        toast({ 
-          title: t('common.error'), 
-          description: 'Invalid JSON file', 
-          variant: 'destructive' 
+          variant: 'success',
         })
       } else {
+        throw new Error(response?.error || 'Anonymization failed')
+      }
+    } catch (error: any) {
+      const errorMessage = error instanceof SyntaxError 
+        ? 'Invalid JSON file' 
+        : (error?.message || error?.details || t('anonymize.toast.errorDesc'))
+      
+      // Only show error if it's different from the last one
+      if (errorMessage !== lastError) {
+        setLastError(errorMessage)
+        console.error('File import/anonymization error:', error)
         toast({ 
           title: t('common.error'), 
-          description: error?.message || t('anonymize.toast.errorDesc'), 
+          description: errorMessage, 
           variant: 'destructive' 
         })
       }
@@ -87,7 +119,7 @@ export function AnonymizeView() {
     downloadFile(anonymized, 'anonymized-data.json', 'application/json')
     toast({
       title: t('common.exported'),
-      description: 'File downloaded successfully',
+      description: t('common.exportSuccess'),
       variant: 'info'
     })
   }

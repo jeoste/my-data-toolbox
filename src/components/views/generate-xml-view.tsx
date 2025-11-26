@@ -112,7 +112,7 @@ export function GenerateXmlView() {
     downloadFile(generated, 'generated-data.xml', 'application/xml')
     toast({
       title: t('common.exported'),
-      description: 'File downloaded successfully',
+      description: t('common.exportSuccess'),
       variant: 'info'
     })
   }
@@ -136,10 +136,10 @@ export function GenerateXmlView() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Panneau de saisie */}
-        <Card>
+    <div className="container mx-auto p-4 sm:p-6 max-w-[1600px]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+        {/* Input Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
@@ -149,10 +149,10 @@ export function GenerateXmlView() {
               {t('generateXml.instruction')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 flex-1 flex flex-col">
             <Textarea
               placeholder={t('generateXml.placeholder')}
-              className="min-h-[300px] font-mono text-sm"
+              className="min-h-[400px] font-mono text-sm flex-1"
               value={skeleton}
               onChange={(e) => setSkeleton(e.target.value)}
             />
@@ -162,7 +162,7 @@ export function GenerateXmlView() {
               onFileSelect={handleFileSelect}
               disabled={loading}
             />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Input
                 type="number"
                 placeholder={t('generateXml.seedPlaceholder')}
@@ -197,8 +197,8 @@ export function GenerateXmlView() {
           </CardContent>
         </Card>
 
-        {/* Panneau de résultat */}
-        <Card>
+        {/* Result Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="w-5 h-5" />
@@ -206,10 +206,10 @@ export function GenerateXmlView() {
             </CardTitle>
             <CardDescription>{generated ? t('generateXml.resultLabel') : t('generateXml.resultPlaceholder')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex flex-col min-h-0">
             {generated ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <Badge variant="secondary">XML</Badge>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={copyToClipboard}>
@@ -222,12 +222,12 @@ export function GenerateXmlView() {
                     </Button>
                   </div>
                 </div>
-                <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[350px] text-sm">
+                <pre className="bg-muted p-4 rounded-lg overflow-auto flex-1 text-sm min-h-[600px]">
                   <code>{generated}</code>
                 </pre>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-[400px] text-muted-foreground">
+              <div className="flex items-center justify-center min-h-[600px] text-muted-foreground">
                 <div className="text-center">
                   <Zap className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>{t('generateXml.noDataTitle')}</p>

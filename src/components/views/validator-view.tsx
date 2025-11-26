@@ -77,10 +77,10 @@ export function ValidatorView() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="container mx-auto p-4 sm:p-6 max-w-[1600px]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {/* Input Panel */}
-        <Card>
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
@@ -90,12 +90,12 @@ export function ValidatorView() {
               {t('validator.inputDescription')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 flex-1 flex flex-col">
             <Textarea
               placeholder={t('validator.placeholder')}
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
-              className="min-h-[300px] font-mono text-sm"
+              className="min-h-[400px] font-mono text-sm flex-1"
             />
             <FileUpload
               accept=".json"
@@ -121,7 +121,7 @@ export function ValidatorView() {
         </Card>
 
         {/* Result Panel */}
-        <Card>
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               {validationResult?.isValid ? (
@@ -147,10 +147,10 @@ export function ValidatorView() {
               {!validationResult && t('validator.description.placeholder')}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex flex-col min-h-0">
             {validationResult?.isValid && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <Badge variant="secondary" className="text-green-600 dark:text-green-400">
                     <CheckCircle className="w-3 h-3 mr-1" />
                     {t('validator.badge.valid')}
@@ -166,7 +166,7 @@ export function ValidatorView() {
                     </Button>
                   </div>
                 </div>
-                <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[350px] text-sm">
+                <pre className="bg-muted p-4 rounded-lg overflow-auto flex-1 text-sm min-h-[600px]">
                   <code>{validationResult.formatted}</code>
                 </pre>
               </div>
@@ -179,10 +179,10 @@ export function ValidatorView() {
                   {t('validator.badge.invalid')}
                 </Badge>
                 <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-                  <p className="text-white font-medium mb-2">
+                  <p className="text-destructive font-medium mb-2">
                     {t('validator.toastInvalidTitle')} :
                   </p>
-                  <p className="text-white/90 text-sm font-mono">
+                  <p className="text-destructive/90 text-sm font-mono">
                     {validationResult.error}
                   </p>
                 </div>
@@ -190,7 +190,7 @@ export function ValidatorView() {
             )}
             
             {!validationResult && (
-              <div className="flex items-center justify-center h-[400px] text-muted-foreground">
+              <div className="flex items-center justify-center min-h-[600px] text-muted-foreground">
                 <div className="text-center">
                   <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>{t('validator.noJson')}</p>

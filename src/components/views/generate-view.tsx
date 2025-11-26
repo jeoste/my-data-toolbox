@@ -16,83 +16,113 @@ export function GenerateView() {
   const [seed, setSeed] = useState<string>('')
   const [count, setCount] = useState<string>('')
   const [loading, setLoading] = useState(false)
+  const [lastError, setLastError] = useState<string | null>(null)
   const { toast } = useToast()
   const { t } = useTranslation()
 
   const handleGenerate = async () => {
+    if (!skeleton.trim() || loading) return
+    
     setLoading(true)
+    setLastError(null)
     try {
-      // Validation rapide du JSON
-      const skeletonData = JSON.parse(skeleton)
+      // Validate JSON locally first
+      let skeletonData
+      try {
+        skeletonData = JSON.parse(skeleton)
+      } catch (parseError) {
+        throw new Error('Invalid JSON format')
+      }
 
       const response = await apiClient.generate(
         skeletonData,
         undefined, // swagger
         {
-          seed: seed ? Number(seed) : undefined,
-          count: count ? Number(count) : undefined,
+          seed: seed && seed.trim() ? Number(seed) : undefined,
+          count: count && count.trim() ? Number(count) : undefined,
         }
       )
 
       if (response?.success && response.data) {
         const formatted = JSON.stringify(response.data, null, 2)
         setGenerated(formatted)
+        setLastError(null)
         toast({ 
           title: t('generate.toast.successTitle'), 
           description: t('generate.toast.successDesc'),
           variant: 'success'
         })
       } else {
-        throw new Error('Generation failed')
+        throw new Error(response?.error || 'Generation failed')
       }
     } catch (error: any) {
-      toast({ 
-        title: t('common.error'), 
-        description: error?.message || t('generate.toast.errorDesc'), 
-        variant: 'destructive' 
-      })
+      const errorMessage = error?.message || error?.details || t('generate.toast.errorDesc')
+      
+      // Only show error if it's different from the last one
+      if (errorMessage !== lastError) {
+        setLastError(errorMessage)
+        console.error('Generation error:', error)
+        toast({ 
+          title: t('common.error'), 
+          description: errorMessage, 
+          variant: 'destructive' 
+        })
+      }
     } finally {
       setLoading(false)
     }
   }
 
   const handleFileSelect = async (file: File) => {
+    if (loading) return
+    
+    setLoading(true)
+    setLastError(null)
     try {
       const content = await readFileAsText(file)
-      const skeletonData = JSON.parse(content)
+      let skeletonData
+      try {
+        skeletonData = JSON.parse(content)
+      } catch (parseError) {
+        throw new SyntaxError('Invalid JSON file')
+      }
+      
       setSkeleton(content)
 
       // Auto-generate after import
-      setLoading(true)
       const response = await apiClient.generate(
         skeletonData,
         undefined,
         {
-          seed: seed ? Number(seed) : undefined,
-          count: count ? Number(count) : undefined,
+          seed: seed && seed.trim() ? Number(seed) : undefined,
+          count: count && count.trim() ? Number(count) : undefined,
         }
       )
 
       if (response?.success && response.data) {
         const formatted = JSON.stringify(response.data, null, 2)
         setGenerated(formatted)
+        setLastError(null)
         toast({ 
           title: t('generate.toast.successTitle'), 
           description: t('generate.toast.successDesc'),
           variant: 'success'
         })
+      } else {
+        throw new Error(response?.error || 'Generation failed')
       }
     } catch (error: any) {
-      if (error instanceof SyntaxError) {
+      const errorMessage = error instanceof SyntaxError 
+        ? 'Invalid JSON file' 
+        : (error?.message || error?.details || t('generate.toast.errorDesc'))
+      
+      // Only show error if it's different from the last one
+      if (errorMessage !== lastError) {
+        setLastError(errorMessage)
+        console.error('File import/generation error:', error)
         toast({ 
           title: t('common.error'), 
-          description: 'Invalid JSON file', 
-          variant: 'destructive' 
-        })
-      } else {
-        toast({ 
-          title: t('common.error'), 
-          description: error?.message || t('generate.toast.errorDesc'), 
+          description: errorMessage, 
           variant: 'destructive' 
         })
       }
@@ -106,7 +136,7 @@ export function GenerateView() {
     downloadFile(generated, 'generated-data.json', 'application/json')
     toast({
       title: t('common.exported'),
-      description: 'File downloaded successfully',
+      description: t('common.exportSuccess'),
       variant: 'info'
     })
   }
@@ -131,10 +161,10 @@ export function GenerateView() {
 
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Panneau de saisie */}
-        <Card>
+    <div className="container mx-auto p-4 sm:p-6 max-w-[1600px]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+        {/* Input Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
@@ -144,10 +174,10 @@ export function GenerateView() {
               {t('generate.instruction')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 flex-1 flex flex-col">
             <Textarea
               placeholder={t('generate.placeholder')}
-              className="min-h-[300px] font-mono text-sm"
+              className="min-h-[400px] font-mono text-sm flex-1"
               value={skeleton}
               onChange={(e) => setSkeleton(e.target.value)}
             />
@@ -157,7 +187,7 @@ export function GenerateView() {
               onFileSelect={handleFileSelect}
               disabled={loading}
             />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Input
                 type="number"
                 placeholder={t('generate.seedPlaceholder')}
@@ -192,8 +222,8 @@ export function GenerateView() {
           </CardContent>
         </Card>
 
-        {/* Panneau de résultat */}
-        <Card>
+        {/* Result Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="w-5 h-5" />
@@ -201,10 +231,10 @@ export function GenerateView() {
             </CardTitle>
             <CardDescription>{generated ? t('generate.resultLabel') : t('generate.resultPlaceholder')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex flex-col min-h-0">
             {generated ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <Badge variant="secondary">{t('common.json')}</Badge>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={copyToClipboard}>
@@ -217,12 +247,12 @@ export function GenerateView() {
                     </Button>
                   </div>
                 </div>
-                <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[350px] text-sm">
+                <pre className="bg-muted p-4 rounded-lg overflow-auto flex-1 text-sm min-h-[600px]">
                   <code>{generated}</code>
                 </pre>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-[400px] text-muted-foreground">
+              <div className="flex items-center justify-center min-h-[600px] text-muted-foreground">
                 <div className="text-center">
                   <Zap className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>{t('generate.noDataTitle')}</p>

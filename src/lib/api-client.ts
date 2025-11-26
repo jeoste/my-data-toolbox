@@ -144,6 +144,9 @@ class APIError extends Error {
 export class APIClient {
   private baseURL: string
 
+  // In local development, use `vercel dev` so that `/api/*` endpoints
+  // (Python serverless functions) are available. With `npm run dev` only
+  // the React frontend runs, and `/api/*` will be served by Vite (404).
   constructor(baseURL: string = '') {
     this.baseURL = baseURL
   }
@@ -300,30 +303,92 @@ export class APIClient {
         body: JSON.stringify(body),
       })
 
-      const data = await response.json()
+      // Handle different status codes
+      if (response.status === 404) {
+        throw new APIError(
+          `Endpoint not found: ${endpoint}`,
+          404,
+          `The API endpoint ${endpoint} does not exist. This may indicate that the endpoint is not deployed or the URL is incorrect.`
+        )
+      }
 
+      if (response.status === 502 || response.status === 503 || response.status === 504) {
+        throw new APIError(
+          'Service unavailable',
+          response.status,
+          `The server is temporarily unavailable (HTTP ${response.status}). Please try again later.`
+        )
+      }
+
+      if (response.status === 500) {
+        throw new APIError(
+          'Internal server error',
+          500,
+          'The server encountered an error while processing your request.'
+        )
+      }
+
+      // Get response text
+      const text = await response.text()
+      
+      // Handle empty responses with better error messages
+      if (!text || text.trim() === '') {
+        // For 200 status, empty response might be valid in some cases
+        if (response.ok && response.status === 200) {
+          throw new APIError(
+            'Empty response from server',
+            response.status,
+            `Server returned empty response. The endpoint ${endpoint} may not be properly configured.`
+          )
+        }
+        // For other status codes, provide more context
+        throw new APIError(
+          `Empty response from server (HTTP ${response.status})`,
+          response.status,
+          `Server returned empty response with status ${response.status}. The endpoint ${endpoint} may not be working correctly.`
+        )
+      }
+
+      let data
+      try {
+        data = JSON.parse(text)
+      } catch (parseError) {
+        // If we can't parse JSON but got text, include it in the error
+        throw new APIError(
+          `Invalid JSON response from server: ${response.status} ${response.statusText}`,
+          response.status,
+          `Response text: ${text.substring(0, 200)}${text.length > 200 ? '...' : ''}`
+        )
+      }
+
+      // Check if response is ok
       if (!response.ok) {
+        const errorMessage = data?.error || data?.message || `HTTP ${response.status}: ${response.statusText}`
         throw new APIError(
-          data.error || 'Request failed',
+          errorMessage,
+          response.status,
+          data?.details || data?.error || response.statusText
+        )
+      }
+
+      // Check if operation was successful
+      if (data.success === false || (data.success === undefined && data.error)) {
+        throw new APIError(
+          data.error || data.message || 'Operation failed',
           response.status,
           data.details
         )
       }
 
-      if (!data.success) {
-        throw new APIError(
-          data.error || 'Operation failed',
-          response.status,
-          data.details
-        )
-      }
-
+      // Return data even if success field is missing (for backward compatibility)
       return data as T
     } catch (error) {
+      // Re-throw APIError as-is
       if (error instanceof APIError) {
         throw error
       }
 
+      // Handle network errors
       if (error instanceof TypeError && error.message.includes('fetch')) {
         throw new APIError(
           'Network error: Unable to connect to the server',
@@ -332,10 +397,11 @@ export class APIClient {
         )
       }
 
+      // Handle other errors
       throw new APIError(
-        'An unexpected error occurred',
+        error instanceof Error ? error.message : 'An unexpected error occurred',
         500,
-        error instanceof Error ? error.message : String(error)
+        error instanceof Error ? error.stack : String(error)
       )
     }
   }

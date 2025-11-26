@@ -152,14 +152,14 @@ class handler(BaseHTTPRequestHandler):
     def _random_leaf_value(self, generator):
         """Generate a random leaf value."""
         value_types = [
-            lambda: generator.generate_string(),
-            lambda: generator.generate_integer(),
-            lambda: generator.generate_float(),
-            lambda: generator.generate_boolean(),
-            lambda: generator.generate_email(),
-            lambda: generator.generate_phone(),
-            lambda: generator.generate_date(),
-            lambda: generator.generate_datetime(),
+            lambda: generator.generate_by_type('string', 'random', {}),
+            lambda: generator.generate_by_type('integer', 'random', {}),
+            lambda: generator.generate_by_type('number', 'random', {}),
+            lambda: generator.generate_by_type('boolean', 'random', {}),
+            lambda: generator.generate_by_type('string', 'email', {}),
+            lambda: generator.generate_by_type('string', 'phone', {}),
+            lambda: generator.generate_by_type('string', 'date', {}),
+            lambda: generator.generate_by_type('string', 'datetime', {}),
         ]
         return random.choice(value_types)()
 

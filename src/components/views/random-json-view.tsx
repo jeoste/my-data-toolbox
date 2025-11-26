@@ -16,36 +16,53 @@ export function RandomJsonView() {
   const [maxKeys, setMaxKeys] = useState<string>('5')
   const [maxItems, setMaxItems] = useState<string>('5')
   const [loading, setLoading] = useState(false)
+  const [lastError, setLastError] = useState<string | null>(null)
   const { toast } = useToast()
   const { t } = useTranslation()
 
   const handleGenerate = async () => {
+    if (loading) return
+    
     setLoading(true)
+    setLastError(null)
     try {
+      const depthNum = depth && depth.trim() ? Number(depth) : 3
+      const maxKeysNum = maxKeys && maxKeys.trim() ? Number(maxKeys) : 5
+      const maxItemsNum = maxItems && maxItems.trim() ? Number(maxItems) : 5
+      const seedNum = seed && seed.trim() ? Number(seed) : undefined
+
       const response = await apiClient.generateRandomJson({
-        seed: seed ? Number(seed) : undefined,
-        depth: depth ? Number(depth) : 3,
-        maxKeys: maxKeys ? Number(maxKeys) : 5,
-        maxItems: maxItems ? Number(maxItems) : 5,
+        seed: seedNum && !isNaN(seedNum) ? seedNum : undefined,
+        depth: !isNaN(depthNum) && depthNum > 0 ? depthNum : 3,
+        maxKeys: !isNaN(maxKeysNum) && maxKeysNum > 0 ? maxKeysNum : 5,
+        maxItems: !isNaN(maxItemsNum) && maxItemsNum > 0 ? maxItemsNum : 5,
       })
 
       if (response?.success && response.data) {
         const formatted = JSON.stringify(response.data, null, 2)
         setGenerated(formatted)
+        setLastError(null)
         toast({ 
           title: t('randomJson.toast.successTitle'), 
           description: t('randomJson.toast.successDesc'),
           variant: 'success'
         })
       } else {
-        throw new Error('Generation failed')
+        throw new Error(response?.error || 'Generation failed')
       }
     } catch (error: any) {
-      toast({ 
-        title: t('common.error'), 
-        description: error?.message || t('randomJson.toast.errorDesc'), 
-        variant: 'destructive' 
-      })
+      const errorMessage = error?.message || error?.details || t('randomJson.toast.errorDesc')
+      
+      // Only show error if it's different from the last one
+      if (errorMessage !== lastError) {
+        setLastError(errorMessage)
+        console.error('Random JSON generation error:', error)
+        toast({ 
+          title: t('common.error'), 
+          description: errorMessage, 
+          variant: 'destructive' 
+        })
+      }
     } finally {
       setLoading(false)
     }
@@ -56,7 +73,7 @@ export function RandomJsonView() {
     downloadFile(generated, 'random-data.json', 'application/json')
     toast({
       title: t('common.exported'),
-      description: 'File downloaded successfully',
+      description: t('common.exportSuccess'),
       variant: 'info'
     })
   }
@@ -80,10 +97,10 @@ export function RandomJsonView() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Panneau de configuration */}
-        <Card>
+    <div className="container mx-auto p-4 sm:p-6 max-w-[1600px]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+        {/* Configuration Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shuffle className="w-5 h-5" />
@@ -93,8 +110,8 @@ export function RandomJsonView() {
               {t('randomJson.instruction')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-2">
+          <CardContent className="space-y-4 flex-1 flex flex-col">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   {t('randomJson.depthLabel')}
@@ -122,7 +139,7 @@ export function RandomJsonView() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   {t('randomJson.maxItemsLabel')}
@@ -170,8 +187,8 @@ export function RandomJsonView() {
           </CardContent>
         </Card>
 
-        {/* Panneau de résultat */}
-        <Card>
+        {/* Result Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="w-5 h-5" />
@@ -179,10 +196,10 @@ export function RandomJsonView() {
             </CardTitle>
             <CardDescription>{generated ? t('randomJson.resultLabel') : t('randomJson.resultPlaceholder')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex flex-col min-h-0">
             {generated ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <Badge variant="secondary">{t('common.json')}</Badge>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={copyToClipboard}>
@@ -195,12 +212,12 @@ export function RandomJsonView() {
                     </Button>
                   </div>
                 </div>
-                <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[500px] text-sm">
+                <pre className="bg-muted p-4 rounded-lg overflow-auto flex-1 text-sm min-h-[600px]">
                   <code>{generated}</code>
                 </pre>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-[400px] text-muted-foreground">
+              <div className="flex items-center justify-center min-h-[600px] text-muted-foreground">
                 <div className="text-center">
                   <Shuffle className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>{t('randomJson.noDataTitle')}</p>

@@ -23,12 +23,17 @@ export function RandomXmlView() {
   const handleGenerate = async () => {
     setLoading(true)
     try {
+      const depthNum = depth && depth.trim() ? Number(depth) : 3
+      const maxChildrenNum = maxChildren && maxChildren.trim() ? Number(maxChildren) : 5
+      const maxItemsNum = maxItems && maxItems.trim() ? Number(maxItems) : 5
+      const seedNum = seed && seed.trim() ? Number(seed) : undefined
+
       const response = await apiClient.generateRandomXml({
-        seed: seed ? Number(seed) : undefined,
-        depth: depth ? Number(depth) : 3,
-        maxChildren: maxChildren ? Number(maxChildren) : 5,
-        maxItems: maxItems ? Number(maxItems) : 5,
-        rootTag: rootTag || 'root',
+        seed: seedNum && !isNaN(seedNum) ? seedNum : undefined,
+        depth: !isNaN(depthNum) ? depthNum : 3,
+        maxChildren: !isNaN(maxChildrenNum) ? maxChildrenNum : 5,
+        maxItems: !isNaN(maxItemsNum) ? maxItemsNum : 5,
+        rootTag: rootTag && rootTag.trim() ? rootTag.trim() : 'root',
       })
 
       if (response?.success && response.data) {
@@ -42,9 +47,11 @@ export function RandomXmlView() {
         throw new Error('Generation failed')
       }
     } catch (error: any) {
+      const errorMessage = error?.message || error?.details || t('randomXml.toast.errorDesc')
+      console.error('Random XML generation error:', error)
       toast({ 
         title: t('common.error'), 
-        description: error?.message || t('randomXml.toast.errorDesc'), 
+        description: errorMessage, 
         variant: 'destructive' 
       })
     } finally {
@@ -57,7 +64,7 @@ export function RandomXmlView() {
     downloadFile(generated, 'random-data.xml', 'application/xml')
     toast({
       title: t('common.exported'),
-      description: 'File downloaded successfully',
+      description: t('common.exportSuccess'),
       variant: 'info'
     })
   }
@@ -81,10 +88,10 @@ export function RandomXmlView() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Panneau de configuration */}
-        <Card>
+    <div className="container mx-auto p-4 sm:p-6 max-w-[1600px]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+        {/* Configuration Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shuffle className="w-5 h-5" />
@@ -94,7 +101,7 @@ export function RandomXmlView() {
               {t('randomXml.instruction')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 flex-1 flex flex-col">
             <div>
               <label className="text-sm font-medium mb-1 block">
                 {t('randomXml.rootTagLabel')}
@@ -105,7 +112,7 @@ export function RandomXmlView() {
                 onChange={(e) => setRootTag(e.target.value)}
               />
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   {t('randomXml.depthLabel')}
@@ -133,7 +140,7 @@ export function RandomXmlView() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   {t('randomXml.maxItemsLabel')}
@@ -182,8 +189,8 @@ export function RandomXmlView() {
           </CardContent>
         </Card>
 
-        {/* Panneau de résultat */}
-        <Card>
+        {/* Result Panel */}
+        <Card className="h-full flex flex-col">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Zap className="w-5 h-5" />
@@ -191,10 +198,10 @@ export function RandomXmlView() {
             </CardTitle>
             <CardDescription>{generated ? t('randomXml.resultLabel') : t('randomXml.resultPlaceholder')}</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex flex-col min-h-0">
             {generated ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <Badge variant="secondary">XML</Badge>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={copyToClipboard}>
@@ -207,12 +214,12 @@ export function RandomXmlView() {
                     </Button>
                   </div>
                 </div>
-                <pre className="bg-muted p-4 rounded-lg overflow-auto max-h-[500px] text-sm">
+                <pre className="bg-muted p-4 rounded-lg overflow-auto flex-1 text-sm min-h-[600px]">
                   <code>{generated}</code>
                 </pre>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-[400px] text-muted-foreground">
+              <div className="flex items-center justify-center min-h-[600px] text-muted-foreground">
                 <div className="text-center">
                   <Shuffle className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p>{t('randomXml.noDataTitle')}</p>
